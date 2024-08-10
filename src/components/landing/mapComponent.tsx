@@ -23,7 +23,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
     useEffect(() => {
       setLat(coords?.latitude ?? 0);
       setLng(coords?.longitude ?? 0);
-    });
+    }, [coords]);
     return (
       <div ref={ref}>
         {!isGeolocationAvailable ? (
