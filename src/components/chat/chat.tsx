@@ -29,6 +29,7 @@ export default function Chat({ disasterId }: { disasterId: string }) {
   }, [initialMessages]);
 
   useEffect(() => {
+    //TODO: Nandan - Add Pusher key and cluster to env.js
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
