@@ -17,10 +17,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
       </div>
     );
 
-  if (status === "unauthenticated") return <>{/* <SignIn /> */}</>;
-
-  if (status === "authenticated" && session.user.role !== "ADMIN")
-    return <>{/* <Unauthorized user={session.user} /> */}</>;
+  // if (status === "unauthenticated") return <>{/* <SignIn /> */}</>;
 
   return (
     <div className="flex h-screen w-screen">
