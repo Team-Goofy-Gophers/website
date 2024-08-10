@@ -1,11 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import Chat from "../chat/chat";
-import MapComponent from "./mapComponent";
-import {
-  ResizablePanel,
-  ResizablePanelGroup,
-  ResizablePanelRef,
-} from "~/components/ui/resizable";
+import { X } from "lucide-react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
+
 import {
   Drawer,
   DrawerClose,
@@ -16,8 +11,15 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
-import { X } from "lucide-react";
+import {
+  ResizablePanel,
+  ResizablePanelGroup,
+  ResizablePanelRef,
+} from "~/components/ui/resizable";
+
+import Chat from "../chat/chat";
 import { Button } from "../ui/button";
+import MapComponent from "./mapComponent";
 
 export default function HeroSection() {
   const mapRef = useRef<ResizablePanelRef>(null);
@@ -28,6 +30,7 @@ export default function HeroSection() {
   useEffect(() => {
     chatRef.current?.collapse();
   });
+
   return (
     <>
       <ResizablePanelGroup
@@ -45,23 +48,27 @@ export default function HeroSection() {
             onClick={(e) => e.currentTarget.scrollIntoView()}
             className="mt-20 h-[calc(100vh-1rem)] pt-2 md:hidden"
           >
-            <MapComponent
-              customChat={
-                <Drawer>
-                  <DrawerTrigger asChild>
-                    <Button>Chat</Button>
-                  </DrawerTrigger>
-                  <DrawerContent ref={chatDrawerRef}>
-                    <Chat
-                      className="h-full w-screen border border-none"
-                      disasterId={currDisasterId}
-                    />
-                  </DrawerContent>
-                </Drawer>
-              }
-              onChatClick={() => {}}
-              className="animate-scale h-[calc(100vh-1rem)] overflow-hidden rounded-md border-2 border-border"
-            />
+            <Drawer>
+              <MapComponent
+                customChat={({ onClick }) => {
+                  return (
+                    <DrawerTrigger asChild>
+                      <Button onClick={onClick}>Chat</Button>
+                    </DrawerTrigger>
+                  );
+                }}
+                onChatClick={(id) => {
+                  setCurrDisasterId(id);
+                }}
+                className="h-[calc(100vh-1rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
+              />
+              <DrawerContent ref={chatDrawerRef}>
+                <Chat
+                  className="h-full w-screen border border-none"
+                  disasterId={currDisasterId}
+                />
+              </DrawerContent>
+            </Drawer>
           </div>
         </div>
 
@@ -85,7 +92,7 @@ export default function HeroSection() {
               chatRef.current?.expand();
               setCurrDisasterId(id);
             }}
-            className="animate-scale h-[calc(100vh-6rem)] overflow-hidden rounded-md border-2 border-border"
+            className="h-[calc(100vh-6rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
           />
         </ResizablePanel>
         <ResizablePanel

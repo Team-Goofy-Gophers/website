@@ -90,14 +90,14 @@ const disasterRouter = createTRPCRouter({
             },
             {
               long: {
-                lte: input.long + 0.5,
-                gte: input.long - 0.5,
+                lte: input.long + 10,
+                gte: input.long - 10,
               },
             },
             {
               lat: {
-                lte: input.lat + 0.5,
-                gte: input.lat - 0.5,
+                lte: input.lat + 10,
+                gte: input.lat - 10,
               },
             },
           ],
@@ -138,6 +138,8 @@ const disasterRouter = createTRPCRouter({
         },
       });
 
+      if (report.status === "RESOLVED") return;
+
       const disasterReports = await ctx.db.disasterReport.findMany({
         where: {
           DisasterAlert: {
@@ -150,12 +152,26 @@ const disasterRouter = createTRPCRouter({
       });
 
       let accumulatedIntensity = 0;
+      let accumulatedBadIntensity = 0;
 
-      disasterReports?.map((ele) => {
-        accumulatedIntensity += ele.User.mmr / 100;
+      disasterReports.forEach((ele) => {
+        if (ele.status === "ONGOING")
+          accumulatedIntensity += ele.User.mmr / 100;
+        else if (ele.status === "FAKE")
+          accumulatedBadIntensity += ele.User.mmr / 100;
       });
 
-      if (accumulatedIntensity >= report.Disaster.intensity) {
+      if (accumulatedBadIntensity > 1.5 * accumulatedIntensity) {
+        if (accumulatedBadIntensity >= report.Disaster.intensity)
+          await ctx.db.disasterAlert.update({
+            where: {
+              id: report.id,
+            },
+            data: {
+              status: "UNRELIABLE",
+            },
+          });
+      } else if (accumulatedIntensity >= report.Disaster.intensity) {
         await ctx.db.disasterAlert.update({
           where: {
             id: report.id,
@@ -194,10 +210,12 @@ const disasterRouter = createTRPCRouter({
         },
       });
 
+      if (report.DisasterAlert.status === "RESOLVED") return;
+
       const disasterReports = await ctx.db.disasterReport.findMany({
         where: {
           DisasterAlert: {
-            id: report.id,
+            id: report.DisasterAlert.id,
           },
         },
         include: {
@@ -206,12 +224,29 @@ const disasterRouter = createTRPCRouter({
       });
 
       let accumulatedIntensity = 0;
+      let accumulatedBadIntensity = 0;
 
-      disasterReports?.map((ele) => {
-        accumulatedIntensity += ele.User.mmr / 100;
+      disasterReports.forEach((ele) => {
+        if (ele.status === "ONGOING")
+          accumulatedIntensity += ele.User.mmr / 100;
+        else if (ele.status === "FAKE")
+          accumulatedBadIntensity += ele.User.mmr / 100;
+        else console.log("WHY NOT\n");
       });
 
-      if (accumulatedIntensity >= report.DisasterAlert.Disaster.intensity) {
+      if (accumulatedBadIntensity > 1.5 * accumulatedIntensity) {
+        if (accumulatedBadIntensity >= report.DisasterAlert.Disaster.intensity)
+          await ctx.db.disasterAlert.update({
+            where: {
+              id: report.id,
+            },
+            data: {
+              status: "UNRELIABLE",
+            },
+          });
+      } else if (
+        accumulatedIntensity >= report.DisasterAlert.Disaster.intensity
+      ) {
         await ctx.db.disasterAlert.update({
           where: {
             id: report.id,

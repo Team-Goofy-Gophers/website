@@ -1,5 +1,17 @@
-import { Map, Marker } from "@vis.gl/react-google-maps";
-import { forwardRef, type ReactNode, useEffect, useRef, useState } from "react";
+import {
+  AdvancedMarker,
+  InfoWindow,
+  Map,
+  Pin,
+} from "@vis.gl/react-google-maps";
+import {
+  createElement,
+  forwardRef,
+  type FunctionComponent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useGeolocated } from "react-geolocated";
 
 import { Button } from "~/components/ui/button";
@@ -13,17 +25,21 @@ import { api } from "~/utils/api";
 interface MapComponentProps {
   className?: string;
   onChatClick: (disasterId: string) => void;
-  customChat?: ReactNode;
+  customChat?: FunctionComponent<{ onClick: () => void }>;
 }
+
+type MarkerType = {
+  id: number;
+  lat: number;
+  lng: number;
+  disasterId: string | null;
+  status: "ONGOING" | "UNRELIABLE";
+  intensity: number;
+};
 
 const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
   ({ onChatClick, className, customChat }, ref) => {
-    const [activeMarker, setActiveMarker] = useState<{
-      id: number;
-      lat: number;
-      lng: number;
-      disasterId: string | null;
-    } | null>(null);
+    const [activeMarker, setActiveMarker] = useState<MarkerType | null>(null);
 
     const tooltipRef = useRef<HTMLDivElement>(null);
 
@@ -37,19 +53,12 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
         userDecisionTimeout: 5000,
       });
 
-    const [markers, setMarkers] = useState<
-      {
-        id: number;
-        lat: number;
-        lng: number;
-        disasterId: string | null;
-      }[]
-    >([]);
+    const [markers, setMarkers] = useState<MarkerType[]>([]);
 
     const { data: disasterAlerts } = api.disaster.getDisasterAlerts.useQuery({
       lat: coords?.latitude ?? 0,
       long: coords?.longitude ?? 0,
-      status: "ONGOING",
+      status: ["ONGOING", "UNRELIABLE"],
     });
 
     useEffect(() => {
@@ -60,6 +69,8 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
               lat: disaster.lat,
               lng: disaster.long,
               disasterId: disaster.id,
+              status: disaster.status as "ONGOING" | "UNRELIABLE",
+              intensity: disaster.Disaster.intensity,
             }))
           : [],
       );
@@ -98,6 +109,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
             </div>
           ) : coords ? (
             <Map
+              mapId={"homeMap"}
               className={className}
               defaultZoom={13}
               defaultCenter={{ lat: coords.latitude, lng: coords.longitude }}
@@ -120,12 +132,14 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                     lat: ev?.detail?.latLng?.lat ?? 0,
                     lng: ev?.detail?.latLng?.lng ?? 0,
                     disasterId: null,
+                    status: "UNRELIABLE",
+                    intensity: 0,
                   },
                 ]);
               }}
             >
               {markers.map((marker, index) => (
-                <Marker
+                <AdvancedMarker
                   key={index}
                   draggable={true}
                   onDrag={(event) => {
@@ -146,7 +160,29 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                     }
                   }}
                   position={{ lat: marker.lat, lng: marker.lng }}
-                />
+                >
+                  {marker.status === "ONGOING" ? (
+                    marker.intensity > 70 ? (
+                      <Pin
+                        background={"#F60002"}
+                        borderColor={"#b88e00"}
+                        glyphColor={"#FF7373"}
+                      />
+                    ) : (
+                      <Pin
+                        background={"#f4b400"}
+                        borderColor={"#b88e00"}
+                        glyphColor={"#F8CE69"}
+                      />
+                    )
+                  ) : (
+                    <Pin
+                      background={"#0f9d58"}
+                      borderColor={"#006425"}
+                      glyphColor={"#60d98f"}
+                    />
+                  )}
+                </AdvancedMarker>
               ))}
             </Map>
           ) : (
@@ -170,7 +206,13 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
         >
           {activeMarker?.disasterId ? (
             <>
-              {customChat ?? (
+              {customChat ? (
+                createElement(customChat, {
+                  onClick: () => {
+                    onChatClick(activeMarker.disasterId!);
+                  },
+                })
+              ) : (
                 <Button
                   onClick={() => {
                     onChatClick(activeMarker.disasterId!);
