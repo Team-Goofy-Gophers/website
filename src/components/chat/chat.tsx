@@ -88,7 +88,7 @@ export default function Chat({
   };
 
   return (
-    <Card className="relative h-[calc(100svh-6rem)] min-w-[25rem]">
+    <Card className="relative h-[calc(100svh-6rem)]">
       <CardHeader className="z-10 w-full bg-background">
         <CardTitle>{disasterId}</CardTitle>
       </CardHeader>
