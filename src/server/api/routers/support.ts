@@ -11,12 +11,12 @@ export const supportRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.disaster.update({
+      await ctx.db.disasterAlert.update({
         where: {
           id: input.disasterId,
         },
         data: {
-          supportAmount: {
+          totalSupportAmount: {
             increment: input.amount,
           },
           Support: {
@@ -35,12 +35,12 @@ export const supportRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return await ctx.db.disaster.findUnique({
+      return await ctx.db.disasterAlert.findUnique({
         where: {
           id: input.disasterId,
         },
         select: {
-          supportAmount: true,
+          totalSupportAmount: true,
         },
       });
     }),
