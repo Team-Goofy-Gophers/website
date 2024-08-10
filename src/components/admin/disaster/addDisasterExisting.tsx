@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DisasterStatus } from "@prisma/client";
 import React, { useState, type FunctionComponent } from "react";
 import { useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
@@ -23,19 +24,28 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 
-import { useLocationStore } from "~/store";
 import { api } from "~/utils/api";
 import { addDisasterReportExistingZ } from "~/zod/disaster";
 
-const AddDisasterReportExisting: FunctionComponent = () => {
-  const { lat, lng } = useLocationStore();
+const AddDisasterReportExisting: FunctionComponent<{
+  disasterId: string;
+  lat: number;
+  long: number;
+}> = ({ disasterId, lat, long }) => {
   const [open, setOpen] = useState(false);
 
   const { data } = api.disaster.getDisasterAlerts.useQuery({
-    lat: lat ?? 0,
-    long: lng ?? 0,
+    lat: lat,
+    long: long,
     status: "ONGOING",
   });
 
@@ -53,7 +63,7 @@ const AddDisasterReportExisting: FunctionComponent = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: "",
-      disasterAlertId: "",
+      disasterAlertId: disasterId,
       status: "ONGOING",
     },
   });
@@ -114,12 +124,41 @@ const AddDisasterReportExisting: FunctionComponent = () => {
             />
             <FormField
               control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={DisasterStatus.ONGOING}>
+                          {DisasterStatus.ONGOING}
+                        </SelectItem>
+                        <SelectItem value={DisasterStatus.RESOLVED}>
+                          {DisasterStatus.RESOLVED}
+                        </SelectItem>
+                        <SelectItem value={DisasterStatus.FAKE}>
+                          {DisasterStatus.FAKE}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="disasterAlertId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Disaster</FormLabel>
                   <FormControl>
                     <ComboBox
+                      disabled={!!disasterId}
                       data={disasterAlerts ?? []}
                       placeholder="Seacrh disasters..."
                       value={field.value}

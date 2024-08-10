@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { FaGithub } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
+
+import { links } from "~/constants/links";
 import { navItems } from "~/constants/nav-items";
-import Link from "next/link";
-import {links} from "~/constants/links";
 
 export default function Footer() {
   const router = useRouter();
@@ -40,9 +41,10 @@ export default function Footer() {
         <div className="flex-grow">
           {/* <!-- nav items --> */}
           <ul className="mx-10 mt-8 flex flex-grow flex-wrap items-center justify-center gap-x-10 text-center text-lg font-semibold opacity-80">
-            {navItems.map((item) => {
+            {navItems.map((item, idx) => {
               return (
                 <li
+                  key={idx}
                   className={`${router.pathname === item.link ? "underline" : ""}`}
                 >
                   <Link href={item.link}>{item.name}</Link>

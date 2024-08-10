@@ -116,7 +116,6 @@ const disasterRouter = createTRPCRouter({
           description: input.description,
           lat: input.lat,
           long: input.long,
-          status: input.status,
           Disaster: {
             connect: {
               id: input.disasterId,
