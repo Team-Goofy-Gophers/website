@@ -32,7 +32,7 @@ export default function HeroSection() {
     <>
       <ResizablePanelGroup
         direction="horizontal"
-        className="flex h-fit w-screen flex-col border-2 p-2 md:h-[calc(100vh-5rem)] md:flex-row md:gap-2 md:px-2"
+        className="flex h-fit w-screen flex-col md:min-h-[calc(100vh-5rem)] md:flex-row md:items-center md:gap-2 md:px-2"
       >
         <div className="flex h-fit w-screen flex-col justify-center gap-4 bg-card py-20 text-center md:hidden">
           <h1 className="text-4xl font-bold">Goofy Goofers</h1>
@@ -78,7 +78,7 @@ export default function HeroSection() {
             <h2>Help people in need through chat.</h2>
           </div>
         </ResizablePanel>
-        <ResizablePanel collapsible={true} className="md:h-[calc(100vh-5rem)]">
+        <ResizablePanel collapsible={true} className="md:h-[calc(100vh-6rem)]">
           <MapComponent
             onChatClick={(id: string) => {
               mapRef.current?.collapse();

@@ -31,10 +31,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
 
       <div className="h-full w-full">
         <NavBar />
-        <main
-          id="main-section"
-          // className={`${GeistSans.className} h-[calc(100vh_-_3.5rem_-2.5rem)]`}
-        >
+        <main id="main-section" className={`mt-20`}>
           {loading ? (
             <div className="flex size-full items-center justify-center">
               {/* <Loader /> */}

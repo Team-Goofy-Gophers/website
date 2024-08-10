@@ -39,12 +39,12 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="flex h-20 w-full flex-row items-center justify-center border-b-2 text-foreground">
+      <nav className="fixed z-50 flex h-20 w-full flex-row items-center justify-center border-b-2 bg-background text-foreground">
         {/* <!-- logo --> */}
         <div className="flex w-full max-w-[90rem] flex-row px-6">
           <Link
             href="/"
-            className="w-full text-nowrap text-center lg:text-4xl text-3xl font-extrabold hover:cursor-pointer lg:w-fit"
+            className="w-full text-nowrap text-center text-3xl font-extrabold hover:cursor-pointer lg:w-fit lg:text-4xl"
           >
             Goofy Gophers
           </Link>
@@ -76,7 +76,7 @@ export default function NavBar() {
           />
         </div>
       </nav>
-          <Drawer isOpen={menuOpen} toggleDrawer={toggleDrawer} />
+      <Drawer isOpen={menuOpen} toggleDrawer={toggleDrawer} />
     </>
   );
 }
