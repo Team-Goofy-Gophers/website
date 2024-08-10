@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { navItems } from "~/constants/nav-items";
-import ThemeSwitch from "./theme-switch";
-import Profile from "./profile";
-import Drawer from "./drawer";
 import { GiHamburgerMenu } from "react-icons/gi";
+
+import { navItems } from "~/constants/nav-items";
+
+import Drawer from "./drawer";
+import Profile from "./profile";
+import ThemeSwitch from "./theme-switch";
 
 export default function NavBar() {
   const router = useRouter();
@@ -42,7 +44,7 @@ export default function NavBar() {
         <div className="flex w-full max-w-[90rem] flex-row px-6">
           <Link
             href="/"
-            className="w-full text-center text-4xl font-extrabold hover:cursor-pointer lg:w-fit"
+            className="w-full text-nowrap text-center lg:text-4xl text-3xl font-extrabold hover:cursor-pointer lg:w-fit"
           >
             Goofy Gophers
           </Link>
@@ -69,12 +71,12 @@ export default function NavBar() {
 
           {/* <!-- mobile options --> */}
           <GiHamburgerMenu
-            className="relative block size-10 lg:hidden"
+            className="absolute right-5 top-4 block size-10 lg:hidden"
             onClick={toggleDrawer}
           />
         </div>
       </nav>
-      <Drawer isOpen={menuOpen} toggleDrawer={toggleDrawer} />
+          <Drawer isOpen={menuOpen} toggleDrawer={toggleDrawer} />
     </>
   );
 }
