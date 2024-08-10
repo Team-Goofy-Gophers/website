@@ -1,3 +1,4 @@
+import Chat from "../chat/chat";
 import MapComponent from "./mapComponent";
 
 export default function HeroSection() {

@@ -2,11 +2,15 @@ import { GeistSans } from "geist/font/sans";
 import { useSession } from "next-auth/react";
 import React, { type ReactNode, type FunctionComponent } from "react";
 import { Toaster } from "sonner";
+import { boolean } from "zod";
+import NavBar from "~/components/layout/navbar";
 
 import { useLoading } from "~/hooks";
 
 const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   const { status, data: session } = useSession();
+
+  const [sideBarOpen , setSideBarOpen] = React.useState<boolean>(false);
 
   const loading = useLoading();
 
@@ -25,8 +29,9 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
       {/* <SideNav /> */}
 
       <div className="flex h-full w-full flex-col">
-        {/* <NavBar /> */}
+        <NavBar/>
         <main
+        id="main-section"
           className={`${GeistSans.className} h-[calc(100vh_-_3.5rem_-2.5rem)]`}
         >
           {loading ? (

@@ -1,9 +1,29 @@
-import HeroSection from "~/components/landing/heroSection";
+import { signIn, signOut, useSession } from "next-auth/react";
+import HeroSection from "~/components/landing/HeroSection";
+import { Button } from "~/components/ui/button";
 
 export default function Home() {
+  const { data: session } = useSession();
   return (
-    <div className="mt-20 flex h-full w-full flex-col">
+    <>
+      {session ? (
+        <Button
+          onClick={async () => {
+            await signOut();
+          }}
+        >
+          Logout
+        </Button>
+      ) : (
+        <Button
+          onClick={async () => {
+            await signIn("google");
+          }}
+        >
+          Login
+        </Button>
+      )}
       <HeroSection />
-    </div>
+    </>
   );
 }
