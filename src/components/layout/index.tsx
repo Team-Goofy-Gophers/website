@@ -11,7 +11,7 @@ import { useLoading } from "~/hooks";
 const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   const { status } = useSession();
 
-  const [sideBarOpen , setSideBarOpen] = React.useState<boolean>(false);
+  const [sideBarOpen, setSideBarOpen] = React.useState<boolean>(false);
 
   const loading = useLoading();
 
@@ -29,11 +29,11 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
       <Toaster />
       {/* <SideNav /> */}
 
-      <div className="flex h-full w-full flex-col">
-        <NavBar/>
+      <div className="h-full w-full">
+        <NavBar />
         <main
-        id="main-section"
-          className={`${GeistSans.className} h-[calc(100vh_-_3.5rem_-2.5rem)]`}
+          id="main-section"
+          // className={`${GeistSans.className} h-[calc(100vh_-_3.5rem_-2.5rem)]`}
         >
           {loading ? (
             <div className="flex size-full items-center justify-center">

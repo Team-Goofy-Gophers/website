@@ -37,7 +37,7 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="relative flex h-20 w-full flex-row items-center justify-center border-b-2 text-foreground">
+      <nav className="flex h-20 w-full flex-row items-center justify-center border-b-2 text-foreground">
         {/* <!-- logo --> */}
         <div className="flex w-full max-w-[90rem] flex-row px-6">
           <a
