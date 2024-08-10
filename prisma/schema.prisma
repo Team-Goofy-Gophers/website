@@ -92,7 +92,7 @@ model DisasterAlert {
     lat                Float
     long               Float
     status             DisasterStatus @default(UNRESOLVED)
-    totalSupportAmount Int
+    totalSupportAmount Int            @default(0)
 
     disasterId String
     Disaster   Disaster @relation(fields: [disasterId], references: [id], onDelete: Cascade)
