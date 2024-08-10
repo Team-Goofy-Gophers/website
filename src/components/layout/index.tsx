@@ -2,6 +2,7 @@ import { GeistSans } from "geist/font/sans";
 import { useSession } from "next-auth/react";
 import React, { type ReactNode, type FunctionComponent } from "react";
 import { Toaster } from "sonner";
+
 import { useLoading } from "~/hooks";
 
 const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {

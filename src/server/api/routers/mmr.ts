@@ -1,7 +1,9 @@
-import { addMMRZ, removeMMRZ } from "~/zod/mmr";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+
 import { getMMRRatio, getRankFromMMR } from "~/utils/mmr";
+import { addMMRZ, removeMMRZ } from "~/zod/mmr";
+
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 const mmrRouter = createTRPCRouter({
   addMMR: protectedProcedure.input(addMMRZ).mutation(async ({ ctx, input }) => {

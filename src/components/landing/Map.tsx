@@ -1,4 +1,5 @@
 import { Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
+
 import { env } from "~/env";
 
 export default function MapComponent() {
