@@ -3,9 +3,9 @@ import mmrRouter from "~/server/api/routers/mmr";
 import userRouter from "~/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
+import { geminiRouter } from "./routers/gemini";
 import { guidesRouter } from "./routers/guides";
 import { pusherRouter } from "./routers/pusher";
-import { geminiRouter } from "./routers/gemini";
 
 /**
  * This is the primary router for your server.
@@ -17,6 +17,7 @@ export const appRouter = createTRPCRouter({
   disaster: disasterRouter,
   mmr: mmrRouter,
   chat: pusherRouter,
+  guides: guidesRouter,
   gemini: geminiRouter,
 });
 

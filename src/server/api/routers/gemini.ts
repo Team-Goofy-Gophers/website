@@ -73,12 +73,14 @@ const geminiRouter = createTRPCRouter({
   guide: protectedProcedure
     .input(GuideInput)
     .mutation(async ({ ctx, input }) => {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const prompt = `List all essential actions to take ${input.phase} a ${input.disaster} in ${input.language} language.`;
 
       const jsonModel = model;
       jsonModel.generationConfig = generatorConfig;
 
       const result = await jsonModel.generateContent(prompt);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return JSON.parse(result.response.text());
     }),
 
@@ -91,12 +93,14 @@ const geminiRouter = createTRPCRouter({
       return result.response.text();
     }),
 
-    // Chat route
+  // Chat route
   chat: protectedProcedure.input(ChatInput).mutation(async ({ ctx, input }) => {
     const chat = model.startChat({
       history: input.history,
     });
-    const result = await chat.sendMessage(input.text + "\n respond in " + input.language);
+    const result = await chat.sendMessage(
+      input.text + "\n respond in " + input.language,
+    );
     return result.response.text();
   }),
 });
