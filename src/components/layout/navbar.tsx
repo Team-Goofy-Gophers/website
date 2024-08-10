@@ -44,7 +44,7 @@ export default function NavBar() {
         <div className="flex w-full max-w-[90rem] flex-row px-6">
           <Link
             href="/"
-            className="w-full text-nowrap text-center text-3xl font-extrabold hover:cursor-pointer lg:w-fit lg:text-4xl"
+            className="w-full text-nowrap text-center text-xl font-extrabold hover:cursor-pointer lg:w-fit lg:text-4xl"
           >
             Goofy Gophers
           </Link>

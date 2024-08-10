@@ -36,7 +36,6 @@ export default function Editor({
           value={text}
           onChange={onChange}
           modules={modules}
-          className="m-3 bg-white text-black sm:m-auto sm:mx-3 sm:w-[90%] md:m-auto md:w-full lg:w-1/2"
         />
       </div>
     </>

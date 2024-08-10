@@ -64,158 +64,51 @@ export default function Guides() {
   });
   return (
     <>
-      <div className="container flex w-full flex-col items-center justify-center gap-2">
-        <Carousel
-          opts={{
-            align: "start",
-          }}
-          className="w-full"
-        >
-          <CarouselContent>
-            {allGuides.data?.map((guide, index) => (
-              <CarouselItem key={index} className="basis-1/5">
-                <div className="p-1">
-                  <Card
-                    onClick={() => {
-                      setNewGuide(false);
-                      setCurrentGuide(guide);
-                      setData(guide.data);
-                    }}
-                    className="h-[10rem] w-[15rem] duration-300 hover:scale-105 hover:cursor-pointer"
-                  >
-                    <CardHeader>
-                      <CardTitle>{guide.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex aspect-square items-center justify-center p-6">
-                      {guide.images[0] ? (
-                        <Image
-                          src={guide.images[0]}
-                          alt={guide.title}
-                          width={200}
-                          height={200}
-                          objectFit="cover"
-                          className="aspect-video"
-                        />
-                      ) : null}
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-
-        <Card className="relative w-full">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Gallery</CardTitle>
-            <CldUploadButton
-              onSuccess={(res: CloudinaryUploadWidgetResults) => {
-                setCurrentGuide({
-                  ...currentGuide,
-                  images: currentGuide.images.concat(
-                    //@ts-expect-error nothing
-                    res?.info.secure_url as string,
-                  ),
-                });
-                console.log(res);
-              }}
-              uploadPreset="ot0jbym5"
-              className="rounded-lg bg-black px-4 py-2 text-white dark:bg-white dark:text-black"
-            >
-              Add Image
-            </CldUploadButton>
+      <div className="container flex w-fit flex-col items-center justify-center gap-2">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Guides</CardTitle>
           </CardHeader>
 
-          <CardContent className="flex w-full justify-center">
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-6xl"
-            >
-              <CarouselContent>
-                {currentGuide?.images.map((url, index) => (
-                  <CarouselItem key={index} className="relative">
-                    <div>
-                      <Card>
-                        <CardContent className="aspect-auto">
-                          <Image
-                            src={url}
-                            width={200}
-                            height={200}
-                            alt={`${index}`}
-                            className="h-[10rem] w-[20rem] object-cover"
-                          />
-                        </CardContent>
-                      </Card>
-                    </div>
-
-                    <span
-                      className="absolute right-5 top-3 cursor-pointer rounded-full bg-red-500 p-4"
-                      onClick={() => {
-                        setCurrentGuide({
-                          ...currentGuide,
-                          images: currentGuide.images.filter(
-                            (_, i) => i !== index,
-                          ),
-                        });
-                      }}
-                    >
-                      <Trash2Icon size={20} />
-                    </span>
-                  </CarouselItem>
-                ))}
-
-                <CarouselItem>
-                  <Card
-                    onClick={() => {
-                      setNewGuide(true);
-                      setCurrentGuide({
-                        id: "",
-                        title: "",
-                        data: "",
-                        images: [],
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                      });
-                      setData("");
-                    }}
-                    className="absolute bottom-5 right-5 flex items-center justify-center"
-                  >
-                    <CardContent>Add New Guide</CardContent>
-                  </Card>
-                </CarouselItem>
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
+          <CardContent>
+            <div className="flex flex-col">
+              {allGuides.data?.map((guide, index) => (
+                <h3
+                  key={index}
+                  className={`cursor-pointer hover:underline ${currentGuide.id === guide.id ? "font-bold" : ""}`}
+                  onClick={() => {
+                    setNewGuide(false);
+                    setCurrentGuide(guide);
+                    setData(guide.data);
+                  }}
+                >
+                  {guide.title}
+                </h3>
+              ))}
+              <h3
+                onClick={() => {
+                  setNewGuide(true);
+                  setCurrentGuide({
+                    id: "",
+                    title: "",
+                    data: "",
+                    images: [],
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                  });
+                  setData("");
+                }}
+                className={newGuide ? "font-bold" : ""}
+              >
+                + New Guide
+              </h3>
+            </div>
           </CardContent>
         </Card>
 
-        {currentGuide && !newGuide && (
-          <>
-            <Editor setText={setData} text={data} />
-            <Button
-              onClick={async () => {
-                await updateGuide.mutateAsync({
-                  id: currentGuide.id,
-                  title: currentGuide.title,
-                  data: data,
-                  images: currentGuide.images,
-                });
-              }}
-            >
-              Update
-            </Button>
-          </>
-        )}
-
-        {newGuide && (
-          <>
-            <div className="flex max-w-2xl flex-col gap-4">
+        <Card className="py-6">
+          <CardContent className="flex flex-col gap-3">
+            {newGuide && (
               <Input
                 onChange={(e) => {
                   setCurrentGuide({ ...currentGuide, title: e.target.value });
@@ -223,22 +116,113 @@ export default function Guides() {
                 value={currentGuide.title}
                 placeholder="Title"
               />
-              <Editor setText={setData} text={data} />
-              <Button
-                onClick={async () => {
-                  if (currentGuide.title === "") return;
-                  await createGuide.mutateAsync({
-                    title: currentGuide.title,
-                    data,
-                    images: currentGuide.images,
-                  });
-                }}
-              >
-                Create
-              </Button>
-            </div>
-          </>
-        )}
+            )}
+
+            <Editor setText={setData} text={data} />
+
+            <Card className="relative w-full">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Gallery</CardTitle>
+                <CldUploadButton
+                  onSuccess={(res: CloudinaryUploadWidgetResults) => {
+                    setCurrentGuide({
+                      ...currentGuide,
+                      images: currentGuide.images.concat(
+                        //@ts-expect-error nothing
+                        res?.info.secure_url as string,
+                      ),
+                    });
+                    console.log(res);
+                  }}
+                  uploadPreset="ot0jbym5"
+                  className="rounded-lg bg-black px-4 py-2 text-white dark:bg-white dark:text-black"
+                >
+                  Add Image
+                </CldUploadButton>
+              </CardHeader>
+
+              <CardContent className="flex w-full justify-center">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    loop: true,
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent>
+                    {currentGuide?.images.map((url, index) => (
+                      <CarouselItem key={index} className="relative">
+                        <div>
+                          <Card>
+                            <CardContent className="aspect-auto">
+                              <Image
+                                src={url}
+                                width={200}
+                                height={200}
+                                alt={`${index}`}
+                                className="h-[10rem] w-[20rem] object-cover"
+                              />
+                            </CardContent>
+                          </Card>
+                        </div>
+
+                        <span
+                          className="absolute right-5 top-3 cursor-pointer rounded-full bg-red-500 p-4"
+                          onClick={() => {
+                            setCurrentGuide({
+                              ...currentGuide,
+                              images: currentGuide.images.filter(
+                                (_, i) => i !== index,
+                              ),
+                            });
+                          }}
+                        >
+                          <Trash2Icon size={20} />
+                        </span>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </CardContent>
+            </Card>
+
+            {currentGuide.id !== "" && !newGuide && (
+              <>
+                <Button
+                  onClick={async () => {
+                    await updateGuide.mutateAsync({
+                      id: currentGuide.id,
+                      title: currentGuide.title,
+                      data: data,
+                      images: currentGuide.images,
+                    });
+                  }}
+                >
+                  Update
+                </Button>
+              </>
+            )}
+
+            {newGuide && (
+              <>
+                <Button
+                  onClick={async () => {
+                    if (currentGuide.title === "") return;
+                    await createGuide.mutateAsync({
+                      title: currentGuide.title,
+                      data,
+                      images: currentGuide.images,
+                    });
+                  }}
+                >
+                  Create
+                </Button>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </>
   );
