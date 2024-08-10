@@ -5,6 +5,7 @@ import {
   deleteDisasterZ,
   getAllDisasterAlertsZ,
   getDisasterZ,
+  markDisasterAlertAsZ,
   updateDisasterZ,
 } from "~/zod/disaster";
 
@@ -60,18 +61,46 @@ const disasterRouter = createTRPCRouter({
       });
     }),
 
+  markDisasterAlertAs: protectedProcedure
+    .input(markDisasterAlertAsZ)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.disasterAlert.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          status: input.status,
+        },
+      });
+    }),
+
   getDisasterAlerts: protectedProcedure
     .input(getAllDisasterAlertsZ)
     .query(async ({ ctx, input }) => {
-      // TOD) implement location radius
       return await ctx.db.disasterAlert.findMany({
         where: {
-          status:
-            typeof input.status === "string"
-              ? input.status
-              : {
-                  in: input.status,
-                },
+          AND: [
+            {
+              status:
+                typeof input.status === "string"
+                  ? input.status
+                  : {
+                      in: input.status,
+                    },
+            },
+            {
+              long: {
+                lte: input.long + 0.5,
+                gte: input.long - 0.5,
+              },
+            },
+            {
+              lat: {
+                lte: input.lat + 0.5,
+                gte: input.lat - 0.5,
+              },
+            },
+          ],
         },
         include: {
           Disaster: true,
@@ -85,7 +114,8 @@ const disasterRouter = createTRPCRouter({
       const report = await ctx.db.disasterAlert.create({
         data: {
           description: input.description,
-          location: input.location,
+          lat: input.lat,
+          long: input.long,
           status: input.status,
           Disaster: {
             connect: {
@@ -104,22 +134,44 @@ const disasterRouter = createTRPCRouter({
             },
           },
         },
-      });
-
-      const disasterAlert = await ctx.db.disasterAlert.findUnique({
-        where: {
-          id: report.id,
-        },
         include: {
           Disaster: true,
         },
       });
+
+      const disasterReports = await ctx.db.disasterReport.findMany({
+        where: {
+          DisasterAlert: {
+            id: report.id,
+          },
+        },
+        include: {
+          User: true,
+        },
+      });
+
+      let accumulatedIntensity = 0;
+
+      disasterReports?.map((ele) => {
+        accumulatedIntensity += ele.User.mmr / 100;
+      });
+
+      if (accumulatedIntensity >= report.Disaster.intensity) {
+        await ctx.db.disasterAlert.update({
+          where: {
+            id: report.id,
+          },
+          data: {
+            status: "ONGOING",
+          },
+        });
+      }
     }),
 
   addDisasterReportExisting: protectedProcedure
     .input(addDisasterReportExistingZ)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.disasterReport.create({
+      const report = await ctx.db.disasterReport.create({
         data: {
           description: input.description,
           status: input.status,
@@ -134,7 +186,42 @@ const disasterRouter = createTRPCRouter({
             },
           },
         },
+        include: {
+          DisasterAlert: {
+            include: {
+              Disaster: true,
+            },
+          },
+        },
       });
+
+      const disasterReports = await ctx.db.disasterReport.findMany({
+        where: {
+          DisasterAlert: {
+            id: report.id,
+          },
+        },
+        include: {
+          User: true,
+        },
+      });
+
+      let accumulatedIntensity = 0;
+
+      disasterReports?.map((ele) => {
+        accumulatedIntensity += ele.User.mmr / 100;
+      });
+
+      if (accumulatedIntensity >= report.DisasterAlert.Disaster.intensity) {
+        await ctx.db.disasterAlert.update({
+          where: {
+            id: report.id,
+          },
+          data: {
+            status: "ONGOING",
+          },
+        });
+      }
     }),
 });
 

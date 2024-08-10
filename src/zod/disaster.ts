@@ -28,16 +28,23 @@ const deleteDisasterZ = z.object({
   id: z.string(),
 });
 
+const markDisasterAlertAsZ = z.object({
+  id: z.string(),
+  status: z.nativeEnum(DisasterStatus),
+});
+
 const getAllDisasterAlertsZ = z.object({
   status: z
     .nativeEnum(DisasterStatus)
     .or(z.array(z.nativeEnum(DisasterStatus))),
-  location: z.string(),
+  lat: z.number(),
+  long: z.number(),
 });
 
 const addDisasterReportNewZ = z.object({
   disasterId: z.string(),
-  location: z.string(),
+  lat: z.number(),
+  long: z.number(),
   description: z.string(),
   status: z.nativeEnum(DisasterStatus),
 });
@@ -53,6 +60,7 @@ export {
   getDisasterZ,
   updateDisasterZ,
   deleteDisasterZ,
+  markDisasterAlertAsZ,
   getAllDisasterAlertsZ,
   addDisasterReportNewZ,
   addDisasterReportExistingZ,

@@ -53,7 +53,8 @@ const AddDisasterReportNew: FunctionComponent = () => {
     defaultValues: {
       description: "",
       disasterId: "",
-      location: `${lat}|${lng}`,
+      lat: lat ?? 0,
+      long: lng ?? 0,
       status: "ONGOING",
     },
   });
@@ -62,7 +63,8 @@ const AddDisasterReportNew: FunctionComponent = () => {
     addDisasterReportNew.mutate(
       {
         description: values.description,
-        location: values.location,
+        lat: values.lat,
+        long: values.long,
         status: values.status,
         disasterId: values.disasterId,
       },

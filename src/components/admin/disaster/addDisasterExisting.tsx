@@ -31,11 +31,11 @@ import { addDisasterReportExistingZ } from "~/zod/disaster";
 
 const AddDisasterReportExisting: FunctionComponent = () => {
   const { lat, lng } = useLocationStore();
-
   const [open, setOpen] = useState(false);
 
   const { data } = api.disaster.getDisasterAlerts.useQuery({
-    location: `${lat}|${lng}`,
+    lat: lat ?? 0,
+    long: lng ?? 0,
     status: "ONGOING",
   });
 
