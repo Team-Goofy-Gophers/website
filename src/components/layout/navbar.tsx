@@ -3,15 +3,18 @@ import { useRouter } from "next/router";
 import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 
-import { navItems } from "~/constants/nav-items";
+import { adminNavItems, navItems } from "~/constants/nav-items";
 
 import Drawer from "./drawer";
 import Profile from "./profile";
 import ThemeSwitch from "./theme-switch";
+import { useSession } from "next-auth/react";
 
 export default function NavBar() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = React.useState(false);
+
+  const session = useSession();
 
   function toggleDrawer() {
     const navbar = document.querySelector("nav");
@@ -44,7 +47,7 @@ export default function NavBar() {
         <div className="flex w-full max-w-[90rem] flex-row px-6">
           <Link
             href="/"
-            className="w-full text-nowrap text-center text-xl font-extrabold hover:cursor-pointer lg:w-fit lg:text-4xl"
+            className="w-full text-nowrap text-center text-3xl font-extrabold hover:cursor-pointer lg:w-fit lg:text-4xl"
           >
             Goofy Gophers
           </Link>
@@ -61,6 +64,21 @@ export default function NavBar() {
                 </li>
               );
             })}
+
+            {/* <!-- admin links --> */}
+            {session?.data?.user?.role === "ADMIN" &&
+              adminNavItems.map((item, idx) => {
+                return (
+                  <li
+                    key={idx}
+                    className={`${
+                      router.pathname === item.link ? "underline" : ""
+                    }`}
+                  >
+                    <Link href={item.link}>{item.name}</Link>
+                  </li>
+                );
+              })}
           </ul>
 
           {/* <!-- profiles --> */}
