@@ -1,7 +1,11 @@
-import { Map, type MapCameraChangedEvent } from "@vis.gl/react-google-maps";
-import { forwardRef, useEffect } from "react";
+import {
+  Map,
+  type MapCameraChangedEvent,
+  AdvancedMarker,
+  Pin,
+} from "@vis.gl/react-google-maps";
+import { forwardRef, useEffect, useState } from "react";
 import { useGeolocated } from "react-geolocated";
-import { set } from "zod";
 
 import { env } from "~/env";
 import { cn } from "~/lib/utils";
@@ -22,10 +26,17 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
         userDecisionTimeout: 5000,
       });
 
+    const [markers, setMarkers] = useState<
+      {
+        lat: number;
+        lng: number;
+      }[]
+    >([]);
+
     useEffect(() => {
       setLat(coords?.latitude ?? 0);
       setLng(coords?.longitude ?? 0);
-    }, [coords]);
+    }, [coords, setLat, setLng]);
     return (
       <div ref={ref}>
         {!isGeolocationAvailable ? (
@@ -56,7 +67,27 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                 ev.detail.zoom,
               )
             }
-          ></Map>
+            onClick={(ev) => {
+              setMarkers([
+                ...markers,
+                {
+                  lat: ev?.detail?.latLng?.lat ?? 0,
+                  lng: ev?.detail?.latLng?.lng ?? 0,
+                },
+              ]);
+            }}
+          >
+            {markers.map((marker, index) => {
+              return (
+                <AdvancedMarker
+                  key={index}
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                >
+                  <Pin borderColor={"#008080"} />
+                </AdvancedMarker>
+              );
+            })}
+          </Map>
         ) : (
           <div
             className={cn(
