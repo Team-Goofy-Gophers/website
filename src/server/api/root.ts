@@ -4,6 +4,7 @@ import userRouter from "~/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 import { pusherRouter } from "./routers/pusher";
+import { geminiRouter } from "./routers/gemini";
 
 /**
  * This is the primary router for your server.
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   disaster: disasterRouter,
   mmr: mmrRouter,
   chat: pusherRouter,
+  gemini: geminiRouter,
 });
 
 // export type definition of API
