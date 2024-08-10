@@ -12,7 +12,7 @@ export default function HeroSection() {
           </div>
         </div>
         {/* <Map classNameName="h-screen w-full shadow-md" /> */}
-        <MapComponent className="h-[calc(100vh-5rem)] w-full overflow-hidden rounded-md border-2 border-border" />
+        <MapComponent className="animate-scale h-[calc(100vh-5rem)] w-full overflow-hidden rounded-md border-2 border-border" />
       </main>
     </>
   );
