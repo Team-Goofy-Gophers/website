@@ -23,42 +23,21 @@ import { api } from "~/utils/api";
 
 export default function Guides() {
   const allGuides = api.guides.getAllGuides.useQuery();
-  const [currentGuide, setCurrentGuide] = useState<Guide>({
-    id: "",
-    title: "",
-    data: "",
-    images: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+  const [currentGuide, setCurrentGuide] = useState<Guide | null>(null);
   const [data, setData] = useState<string>("");
   const [newGuide, setNewGuide] = useState<boolean>(false);
 
   const createGuide = api.guides.addGuide.useMutation({
     onSuccess: async () => {
       await allGuides.refetch();
-      setCurrentGuide({
-        id: "",
-        title: "",
-        data: "",
-        images: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      setCurrentGuide(null);
       setData("");
     },
   });
   const updateGuide = api.guides.updateGuide.useMutation({
     onSuccess: async () => {
       await allGuides.refetch();
-      setCurrentGuide({
-        id: "",
-        title: "",
-        data: "",
-        images: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      setCurrentGuide(null);
       setData("");
     },
   });
@@ -75,7 +54,7 @@ export default function Guides() {
               {allGuides.data?.map((guide, index) => (
                 <h3
                   key={index}
-                  className={`cursor-pointer hover:underline ${currentGuide.id === guide.id ? "font-bold" : ""}`}
+                  className={`cursor-pointer hover:underline ${currentGuide?.id === guide.id ? "font-bold" : ""}`}
                   onClick={() => {
                     setNewGuide(false);
                     setCurrentGuide(guide);
@@ -106,9 +85,9 @@ export default function Guides() {
           </CardContent>
         </Card>
 
-        <Card className="py-6">
-          <CardContent className="flex flex-col gap-3">
-            {newGuide && (
+        {currentGuide && (
+          <Card className="py-6">
+            <CardContent className="flex flex-col gap-3">
               <Input
                 onChange={(e) => {
                   setCurrentGuide({ ...currentGuide, title: e.target.value });
@@ -116,113 +95,112 @@ export default function Guides() {
                 value={currentGuide.title}
                 placeholder="Title"
               />
-            )}
 
-            <Editor setText={setData} text={data} />
+              <Editor setText={setData} text={data} />
 
-            <Card className="relative w-full">
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Gallery</CardTitle>
-                <CldUploadButton
-                  onSuccess={(res: CloudinaryUploadWidgetResults) => {
-                    setCurrentGuide({
-                      ...currentGuide,
-                      images: currentGuide.images.concat(
-                        //@ts-expect-error nothing
-                        res?.info.secure_url as string,
-                      ),
-                    });
-                    console.log(res);
-                  }}
-                  uploadPreset="ot0jbym5"
-                  className="rounded-lg bg-black px-4 py-2 text-white dark:bg-white dark:text-black"
-                >
-                  Add Image
-                </CldUploadButton>
-              </CardHeader>
+              <Card className="relative w-full">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Gallery</CardTitle>
+                  <CldUploadButton
+                    onSuccess={(res: CloudinaryUploadWidgetResults) => {
+                      setCurrentGuide({
+                        ...currentGuide,
+                        images: currentGuide.images.concat(
+                          //@ts-expect-error nothing
+                          res?.info.secure_url as string,
+                        ),
+                      });
+                      console.log(res);
+                    }}
+                    uploadPreset="ot0jbym5"
+                    className="rounded-lg bg-black px-4 py-2 text-white dark:bg-white dark:text-black"
+                  >
+                    Add Image
+                  </CldUploadButton>
+                </CardHeader>
 
-              <CardContent className="flex w-full justify-center">
-                <Carousel
-                  opts={{
-                    align: "start",
-                    loop: true,
-                  }}
-                  className="w-full"
-                >
-                  <CarouselContent>
-                    {currentGuide?.images.map((url, index) => (
-                      <CarouselItem key={index} className="relative">
-                        <div>
-                          <Card>
-                            <CardContent className="aspect-auto">
-                              <Image
-                                src={url}
-                                width={200}
-                                height={200}
-                                alt={`${index}`}
-                                className="h-[10rem] w-[20rem] object-cover"
-                              />
-                            </CardContent>
-                          </Card>
-                        </div>
+                <CardContent className="flex w-full justify-center">
+                  <Carousel
+                    opts={{
+                      align: "start",
+                      loop: true,
+                    }}
+                    className="w-full"
+                  >
+                    <CarouselContent>
+                      {currentGuide?.images.map((url, index) => (
+                        <CarouselItem key={index} className="relative">
+                          <div>
+                            <Card>
+                              <CardContent className="aspect-auto">
+                                <Image
+                                  src={url}
+                                  width={200}
+                                  height={200}
+                                  alt={`${index}`}
+                                  className="h-[10rem] w-[20rem] object-cover"
+                                />
+                              </CardContent>
+                            </Card>
+                          </div>
 
-                        <span
-                          className="absolute right-5 top-3 cursor-pointer rounded-full bg-red-500 p-4"
-                          onClick={() => {
-                            setCurrentGuide({
-                              ...currentGuide,
-                              images: currentGuide.images.filter(
-                                (_, i) => i !== index,
-                              ),
-                            });
-                          }}
-                        >
-                          <Trash2Icon size={20} />
-                        </span>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-              </CardContent>
-            </Card>
+                          <span
+                            className="absolute right-5 top-3 cursor-pointer rounded-full bg-red-500 p-4"
+                            onClick={() => {
+                              setCurrentGuide({
+                                ...currentGuide,
+                                images: currentGuide.images.filter(
+                                  (_, i) => i !== index,
+                                ),
+                              });
+                            }}
+                          >
+                            <Trash2Icon size={20} />
+                          </span>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </Carousel>
+                </CardContent>
+              </Card>
 
-            {currentGuide.id !== "" && !newGuide && (
-              <>
-                <Button
-                  onClick={async () => {
-                    await updateGuide.mutateAsync({
-                      id: currentGuide.id,
-                      title: currentGuide.title,
-                      data: data,
-                      images: currentGuide.images,
-                    });
-                  }}
-                >
-                  Update
-                </Button>
-              </>
-            )}
-
-            {newGuide && (
-              <>
-                <Button
-                  onClick={async () => {
-                    if (currentGuide.title === "") return;
-                    await createGuide.mutateAsync({
-                      title: currentGuide.title,
-                      data,
-                      images: currentGuide.images,
-                    });
-                  }}
-                >
-                  Create
-                </Button>
-              </>
-            )}
-          </CardContent>
-        </Card>
+              {newGuide && (
+                <>
+                  <Button
+                    onClick={async () => {
+                      if (currentGuide.title === "") return;
+                      await createGuide.mutateAsync({
+                        title: currentGuide.title,
+                        data,
+                        images: currentGuide.images,
+                      });
+                    }}
+                  >
+                    Create
+                  </Button>
+                </>
+              )}
+              {!newGuide && (
+                <>
+                  <Button
+                    onClick={async () => {
+                      await updateGuide.mutateAsync({
+                        id: currentGuide.id,
+                        title: currentGuide.title,
+                        data: data,
+                        images: currentGuide.images,
+                      });
+                    }}
+                  >
+                    Update
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </>
   );
