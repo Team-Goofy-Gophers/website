@@ -1,9 +1,11 @@
-import { Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
-import { forwardRef, ReactHTMLElement, useState } from "react";
+import { Map, type MapCameraChangedEvent } from "@vis.gl/react-google-maps";
+import { forwardRef, useEffect } from "react";
 import { useGeolocated } from "react-geolocated";
+import { set } from "zod";
 
 import { env } from "~/env";
 import { cn } from "~/lib/utils";
+import { useLocationStore } from "~/store";
 
 interface MapComponentProps {
   className?: string;
@@ -11,15 +13,19 @@ interface MapComponentProps {
 
 const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
   (props, ref) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { setLat, setLng } = useLocationStore();
     const { coords, isGeolocationAvailable, isGeolocationEnabled } =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       useGeolocated({
         positionOptions: {
           enableHighAccuracy: false,
         },
         userDecisionTimeout: 5000,
       });
+
+    useEffect(() => {
+      setLat(coords?.latitude ?? 0);
+      setLng(coords?.longitude ?? 0);
+    }, [coords]);
     return (
       <div ref={ref}>
         {!isGeolocationAvailable ? (
