@@ -136,6 +136,7 @@ const disasterRouter = createTRPCRouter({
           description: input.description,
           lat: input.lat,
           long: input.long,
+          intensity: input.intensity,
           Disaster: {
             connect: {
               id: input.disasterId,
@@ -145,6 +146,7 @@ const disasterRouter = createTRPCRouter({
             create: {
               description: input.description,
               status: input.status,
+              intensity: input.intensity,
               User: {
                 connect: {
                   id: ctx.session.user.id,
@@ -176,13 +178,13 @@ const disasterRouter = createTRPCRouter({
 
       disasterReports.forEach((ele) => {
         if (ele.status === "ONGOING")
-          accumulatedIntensity += ele.User.mmr / 100;
+          accumulatedIntensity += (ele.intensity * ele.User.mmr) / 100;
         else if (ele.status === "FAKE")
-          accumulatedBadIntensity += ele.User.mmr / 100;
+          accumulatedBadIntensity += (ele.intensity * ele.User.mmr) / 100;
       });
 
       if (accumulatedBadIntensity > 1.5 * accumulatedIntensity) {
-        if (accumulatedBadIntensity >= report.Disaster.intensity)
+        if (accumulatedBadIntensity >= report.intensity)
           await ctx.db.disasterAlert.update({
             where: {
               id: report.id,
@@ -191,7 +193,7 @@ const disasterRouter = createTRPCRouter({
               status: "UNRELIABLE",
             },
           });
-      } else if (accumulatedIntensity >= report.Disaster.intensity) {
+      } else if (accumulatedIntensity >= report.intensity) {
         await ctx.db.disasterAlert.update({
           where: {
             id: report.id,
@@ -210,6 +212,7 @@ const disasterRouter = createTRPCRouter({
         data: {
           description: input.description,
           status: input.status,
+          intensity: input.intensity,
           User: {
             connect: {
               id: ctx.session.user.id,
@@ -227,6 +230,17 @@ const disasterRouter = createTRPCRouter({
               Disaster: true,
             },
           },
+        },
+      });
+
+      await ctx.db.disasterAlert.update({
+        where: {
+          id: report.DisasterAlert.id,
+        },
+        data: {
+          intensity: Math.floor(
+            (report.DisasterAlert.intensity + report.intensity) / 2,
+          ),
         },
       });
 
@@ -248,14 +262,14 @@ const disasterRouter = createTRPCRouter({
 
       disasterReports.forEach((ele) => {
         if (ele.status === "ONGOING")
-          accumulatedIntensity += ele.User.mmr / 100;
+          accumulatedIntensity += (ele.intensity * ele.User.mmr) / 100;
         else if (ele.status === "FAKE")
-          accumulatedBadIntensity += ele.User.mmr / 100;
+          accumulatedBadIntensity += (ele.intensity * ele.User.mmr) / 100;
         else console.log("WHY NOT\n");
       });
 
       if (accumulatedBadIntensity > 1.5 * accumulatedIntensity) {
-        if (accumulatedBadIntensity >= report.DisasterAlert.Disaster.intensity)
+        if (accumulatedBadIntensity >= report.DisasterAlert.intensity)
           await ctx.db.disasterAlert.update({
             where: {
               id: report.id,
@@ -264,9 +278,7 @@ const disasterRouter = createTRPCRouter({
               status: "UNRELIABLE",
             },
           });
-      } else if (
-        accumulatedIntensity >= report.DisasterAlert.Disaster.intensity
-      ) {
+      } else if (accumulatedIntensity >= report.DisasterAlert.intensity) {
         await ctx.db.disasterAlert.update({
           where: {
             id: report.id,

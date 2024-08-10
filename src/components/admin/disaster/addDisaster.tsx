@@ -105,8 +105,8 @@ const AddDisaster: FunctionComponent = () => {
                   <FormLabel>Intensity</FormLabel>
                   <FormControl>
                     <Slider
-                      min={1}
-                      max={100}
+                      min={0}
+                      max={10}
                       step={1}
                       value={[field.value]}
                       onValueChange={(e) => field.onChange(e[0])}
@@ -116,8 +116,6 @@ const AddDisaster: FunctionComponent = () => {
                 </FormItem>
               )}
             />
-
-            {/* TODO: images */}
 
             <DialogFooter>
               <Button type="submit">Add</Button>

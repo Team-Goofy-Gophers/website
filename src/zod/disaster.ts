@@ -45,6 +45,7 @@ const addDisasterReportNewZ = z.object({
   disasterId: z.string(),
   lat: z.number(),
   long: z.number(),
+  intensity: z.number(),
   description: z.string(),
   status: z.nativeEnum(DisasterStatus),
 });
@@ -53,6 +54,7 @@ const addDisasterReportExistingZ = z.object({
   description: z.string(),
   status: z.nativeEnum(DisasterStatus),
   disasterAlertId: z.string(),
+  intensity: z.number(),
 });
 
 export {

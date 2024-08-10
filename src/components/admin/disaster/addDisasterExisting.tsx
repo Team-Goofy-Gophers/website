@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Slider } from "~/components/ui/slider";
 import { Textarea } from "~/components/ui/textarea";
 
 import { api } from "~/utils/api";
@@ -64,6 +65,7 @@ const AddDisasterReportExisting: FunctionComponent<{
       description: "",
       disasterAlertId: disasterId,
       status: "ONGOING",
+      intensity: 0,
     },
   });
 
@@ -73,6 +75,7 @@ const AddDisasterReportExisting: FunctionComponent<{
         description: values.description,
         status: values.status,
         disasterAlertId: values.disasterAlertId,
+        intensity: values.intensity,
       },
       {
         onSuccess: () => {
@@ -159,6 +162,25 @@ const AddDisasterReportExisting: FunctionComponent<{
                       placeholder="Seacrh disasters..."
                       value={field.value}
                       setValue={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="intensity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Intensity</FormLabel>
+                  <FormControl>
+                    <Slider
+                      min={0}
+                      max={10}
+                      step={1}
+                      value={[field.value]}
+                      onValueChange={(e) => field.onChange(e[0])}
                     />
                   </FormControl>
                   <FormMessage />

@@ -33,7 +33,7 @@ type MarkerType = {
   lat: number;
   lng: number;
   disasterId: string | null;
-  status: "ONGOING" | "UNRELIABLE";
+  status: "NEW" | "ONGOING" | "UNRELIABLE";
   intensity: number;
 };
 
@@ -132,7 +132,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                     lat: ev?.detail?.latLng?.lat ?? 0,
                     lng: ev?.detail?.latLng?.lng ?? 0,
                     disasterId: null,
-                    status: "UNRELIABLE",
+                    status: "NEW",
                     intensity: 0,
                   },
                 ]);
@@ -141,7 +141,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
               {markers.map((marker, index) => (
                 <AdvancedMarker
                   key={index}
-                  draggable={true}
+                  draggable={!marker.disasterId}
                   onDrag={(event) => {
                     const newLat = event.latLng?.lat();
                     const newLng = event.latLng?.lng();
@@ -162,7 +162,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                   position={{ lat: marker.lat, lng: marker.lng }}
                 >
                   {marker.status === "ONGOING" ? (
-                    marker.intensity > 70 ? (
+                    marker.intensity > 7 ? (
                       <Pin
                         background={"#F60002"}
                         borderColor={"#b88e00"}
@@ -175,11 +175,17 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                         glyphColor={"#F8CE69"}
                       />
                     )
-                  ) : (
+                  ) : marker.status === "UNRELIABLE" ? (
                     <Pin
                       background={"#0f9d58"}
                       borderColor={"#006425"}
                       glyphColor={"#60d98f"}
+                    />
+                  ) : (
+                    <Pin
+                      background={"#0000F7"}
+                      borderColor={"#006425"}
+                      glyphColor={"#9CC0F9"}
                     />
                   )}
                 </AdvancedMarker>
@@ -204,7 +210,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
           ref={tooltipRef}
           className="fixed hidden -translate-x-2/4 -translate-y-[140%] flex-col gap-3 rounded-2xl bg-background/85 p-2 transition-all duration-1000"
         >
-          {activeMarker?.disasterId ? (
+          {activeMarker?.status === "ONGOING" ? (
             <>
               {customChat ? (
                 createElement(customChat, {
@@ -221,11 +227,13 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                   Chat
                 </Button>
               )}
-              <AddDisasterReportExisting
-                disasterId={activeMarker.disasterId}
-                lat={activeMarker.lat}
-                long={activeMarker.lng}
-              />
+              {activeMarker.disasterId && (
+                <AddDisasterReportExisting
+                  disasterId={activeMarker.disasterId}
+                  lat={activeMarker.lat}
+                  long={activeMarker.lng}
+                />
+              )}
             </>
           ) : (
             activeMarker && (

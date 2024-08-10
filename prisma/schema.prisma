@@ -77,7 +77,7 @@ model VerificationToken {
 model Disaster {
     id        String   @id @default(cuid())
     name      String
-    intensity Float // 0-100
+    intensity Float
     images    String[]
 
     DisasterAlert DisasterAlert[]
@@ -91,6 +91,7 @@ model DisasterAlert {
     description        String
     lat                Float
     long               Float
+    intensity          Float
     status             DisasterStatus @default(UNRELIABLE)
     totalSupportAmount Int            @default(0)
 
@@ -109,6 +110,7 @@ model DisasterReport {
     id          String         @id @default(cuid())
     description String
     status      DisasterStatus @default(ONGOING)
+    intensity   Float
 
     disasterAlertId String
     DisasterAlert   DisasterAlert @relation(fields: [disasterAlertId], references: [id])

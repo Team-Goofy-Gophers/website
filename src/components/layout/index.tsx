@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { type ReactNode, type FunctionComponent } from "react";
 import { Toaster } from "sonner";
@@ -11,6 +12,7 @@ import { useLoading } from "~/hooks";
 
 const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   const { status, data: session } = useSession();
+  const pathname = usePathname();
   const router = useRouter();
 
   const loading = useLoading();
@@ -24,7 +26,11 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
 
   if (status === "unauthenticated") void router.push("/");
 
-  if (status === "authenticated" && session.user.role !== "ADMIN")
+  if (
+    status === "authenticated" &&
+    pathname.startsWith("/admin") &&
+    session.user.role !== "ADMIN"
+  )
     return <Unauthorized user={session.user} />;
 
   return (
