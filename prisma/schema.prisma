@@ -31,6 +31,7 @@ model User {
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     Message   Message[]
+    Support   Support[]
 }
 
 model Account {
@@ -81,18 +82,17 @@ model Disaster {
 
     DisasterAlert DisasterAlert[]
 
-    Guide Guide[]
-
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model DisasterAlert {
-    id          String         @id @default(cuid())
-    description String
-    lat         Float
-    long        Float
-    status      DisasterStatus @default(UNRESOLVED)
+    id                 String         @id @default(cuid())
+    description        String
+    lat                Float
+    long               Float
+    status             DisasterStatus @default(UNRESOLVED)
+    totalSupportAmount Int            @default(0)
 
     disasterId String
     Disaster   Disaster @relation(fields: [disasterId], references: [id], onDelete: Cascade)
@@ -102,6 +102,7 @@ model DisasterAlert {
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     Message   Message[]
+    Support   Support[]
 }
 
 model DisasterReport {
@@ -125,9 +126,6 @@ model Guide {
     data   String
     images String[]
 
-    disasterId String
-    Disaster   Disaster @relation(fields: [disasterId], references: [id])
-
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -139,6 +137,19 @@ model Message {
     User          User          @relation(fields: [userId], references: [id])
     DisasterAlert DisasterAlert @relation(fields: [disasterId], references: [id])
     disasterId    String
+    userId        String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Support {
+    id     String @id @default(cuid())
+    amount Int
+
+    DisasterAlert DisasterAlert @relation(fields: [disasterId], references: [id])
+    disasterId    String
+    User          User          @relation(fields: [userId], references: [id])
     userId        String
 
     createdAt DateTime @default(now())
