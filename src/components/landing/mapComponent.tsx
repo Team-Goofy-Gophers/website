@@ -1,5 +1,6 @@
 import { Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
-import { forwardRef, ReactHTMLElement } from "react";
+import { forwardRef, ReactHTMLElement, useState } from "react";
+import { useGeolocated } from "react-geolocated";
 
 import { env } from "~/env";
 
@@ -9,21 +10,38 @@ interface MapComponentProps {
 
 const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
   (props, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      useGeolocated({
+        positionOptions: {
+          enableHighAccuracy: false,
+        },
+        userDecisionTimeout: 5000,
+      });
     return (
       <div ref={ref}>
-        <Map
-          className={`${props.className}`}
-          defaultZoom={13}
-          defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
-          onCameraChanged={(ev: MapCameraChangedEvent) =>
-            console.log(
-              "camera changed:",
-              ev.detail.center,
-              "zoom:",
-              ev.detail.zoom,
-            )
-          }
-        ></Map>
+        {!isGeolocationAvailable ? (
+          <div>Browser does not support</div>
+        ) : !isGeolocationEnabled ? (
+          <div>Geolocation is not enabled</div>
+        ) : coords ? (
+          <Map
+            className={`${props.className}`}
+            defaultZoom={13}
+            defaultCenter={{ lat: 0, lng: 0 }}
+            onCameraChanged={(ev: MapCameraChangedEvent) =>
+              console.log(
+                "camera changed:",
+                ev.detail.center,
+                "zoom:",
+                ev.detail.zoom,
+              )
+            }
+          ></Map>
+        ) : (
+          <div>Getting the location load</div>
+        )}
       </div>
     );
   },
