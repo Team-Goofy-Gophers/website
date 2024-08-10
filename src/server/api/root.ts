@@ -3,6 +3,7 @@ import mmrRouter from "~/server/api/routers/mmr";
 import userRouter from "~/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
+import { guidesRouter } from "./routers/guides";
 import { pusherRouter } from "./routers/pusher";
 
 /**
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   disaster: disasterRouter,
   mmr: mmrRouter,
   chat: pusherRouter,
+  guides: guidesRouter,
 });
 
 // export type definition of API

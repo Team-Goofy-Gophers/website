@@ -81,10 +81,16 @@ model Disaster {
 
     DisasterAlert DisasterAlert[]
 
+<<<<<<< Updated upstream
     Guide Guide[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+=======
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Message   Message[]
+>>>>>>> Stashed changes
 }
 
 model DisasterAlert {
@@ -124,9 +130,6 @@ model Guide {
     title  String
     data   String
     images String[]
-
-    disasterId String
-    Disaster   Disaster @relation(fields: [disasterId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
