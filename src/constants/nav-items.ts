@@ -7,8 +7,14 @@ export const navItems = [
   },
   {
     id: 2,
-    name: "About",
-    link: "/about",
+    name: "Disasters",
+    link: "/admin/disasters",
+    icon: "",
+  },
+  {
+    id: 2,
+    name: "Guides",
+    link: "/admin/guides",
     icon: "",
   },
 ];

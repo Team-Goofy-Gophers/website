@@ -1,40 +1,41 @@
-import { GeistSans } from "geist/font/sans";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React, { type ReactNode, type FunctionComponent } from "react";
 import { Toaster } from "sonner";
-import { boolean } from "zod";
-import NavBar from "~/components/layout/navbar";
-import Footer from "~/components/layout/footer";
 
+import Unauthorized from "~/components/auth/unauthorized";
+import Footer from "~/components/layout/footer";
+import NavBar from "~/components/layout/navbar";
+import Loader from "~/components/loader";
 import { useLoading } from "~/hooks";
 
 const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
-  const { status } = useSession();
-
-  const [sideBarOpen, setSideBarOpen] = React.useState<boolean>(false);
+  const { status, data: session } = useSession();
+  const router = useRouter();
 
   const loading = useLoading();
 
   if (status === "loading")
     return (
       <div className="flex h-screen w-screen items-center justify-center">
-        {/* <Loader /> */}
+        <Loader />
       </div>
     );
 
-  // if (status === "unauthenticated") return <>{/* <SignIn /> */}</>;
+  if (status === "unauthenticated") void router.push("/");
+
+  if (status === "authenticated" && session.user.role !== "ADMIN")
+    return <Unauthorized user={session.user} />;
 
   return (
     <div className="flex h-screen w-screen">
       <Toaster />
-      {/* <SideNav /> */}
-
       <div className="h-full w-full">
         <NavBar />
-        <main id="main-section" className={`mt-20`}>
+        <main id="main-section" className="mt-20 min-h-[80vh] p-5">
           {loading ? (
             <div className="flex size-full items-center justify-center">
-              {/* <Loader /> */}
+              <Loader />
             </div>
           ) : (
             children

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DisasterStatus } from "@prisma/client";
 import React, { useState, type FunctionComponent } from "react";
 import { useForm } from "react-hook-form";
-import { LuPlus } from "react-icons/lu";
 import { toast } from "sonner";
 import { type z } from "zod";
 
@@ -90,10 +89,7 @@ const AddDisasterReportNew: FunctionComponent<{
       }}
     >
       <DialogTrigger asChild>
-        <Button>
-          <LuPlus className="mr-2 size-5" />
-          Report Disaster
-        </Button>
+        <Button>Report Disaster</Button>
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>

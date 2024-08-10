@@ -74,6 +74,26 @@ const disasterRouter = createTRPCRouter({
       });
     }),
 
+  getAllDisasterAlerts: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.disasterAlert.findMany({
+      include: {
+        Disaster: true,
+      },
+    });
+  }),
+
+  getAllDisasterReports: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.disasterReport.findMany({
+      include: {
+        DisasterAlert: {
+          include: {
+            Disaster: true,
+          },
+        },
+      },
+    });
+  }),
+
   getDisasterAlerts: protectedProcedure
     .input(getAllDisasterAlertsZ)
     .query(async ({ ctx, input }) => {

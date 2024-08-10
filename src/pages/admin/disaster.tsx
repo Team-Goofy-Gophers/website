@@ -4,6 +4,8 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
 import AddDisaster from "~/components/admin/disaster/addDisaster";
+import AlertTab from "~/components/admin/disaster/alertTable";
+import ReportsTab from "~/components/admin/disaster/reportsTable";
 
 const Disaster: NextPage = () => {
   return (
@@ -29,7 +31,12 @@ const Disaster: NextPage = () => {
             Reports
           </TabsTrigger>
         </TabsList>
-        <TabsContent value=""></TabsContent>
+        <TabsContent value="alerts">
+          <AlertTab />
+        </TabsContent>
+        <TabsContent value="reports">
+          <ReportsTab />
+        </TabsContent>
       </Tabs>
       <div className="absolute bottom-0 right-0 mb-5 mr-10 flex flex-col gap-3">
         <AddDisaster />
