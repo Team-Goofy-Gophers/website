@@ -13,7 +13,8 @@ export default function HeroSection() {
           </div>
         </div>
         {/* <Map classNameName="h-screen w-full shadow-md" /> */}
-        <MapComponent className="animate-scale h-[calc(100vh-5rem)] overflow-hidden rounded-md border-2 border-border md:h-full md:w-[45vw]" />
+        {/* <MapComponent className="animate-scale h-[calc(100vh-5rem)] overflow-hidden rounded-md border-2 border-border md:h-full md:w-[45vw]" /> */}
+        <Chat disasterId="clznzrboz00007wuym5fqpv9v" />
       </main>
     </>
   );

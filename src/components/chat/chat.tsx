@@ -1,12 +1,26 @@
-import React, { useEffect, useState } from "react";
 import Pusher from "pusher-js";
-import { api } from "~/utils/api"; // Adjust the import according to your project structure
+import React, { useEffect, useRef, useState } from "react";
+
+import { api } from "~/utils/api";
+
+import { Button } from "../ui/button";
+// Adjust the import according to your project structure
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
 
 export default function Chat({ disasterId }: { disasterId: string }) {
   const [messages, setMessages] = useState<
     { id: string; message: string; sender: string; senderId: string }[]
   >([]);
   const [newMessage, setNewMessage] = useState("");
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // Fetch initial messages
   const { data: initialMessages } = api.chat.getMessages.useQuery({
@@ -53,6 +67,12 @@ export default function Chat({ disasterId }: { disasterId: string }) {
     };
   }, [disasterId]);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const sendMessage = api.chat.send.useMutation();
 
   const handleSendMessage = () => {
@@ -62,22 +82,35 @@ export default function Chat({ disasterId }: { disasterId: string }) {
   };
 
   return (
-    <div>
-      <div className="chat-messages">
-        {messages.map((msg) => (
-          <div key={msg.id}>
-            <strong>{msg.sender}:</strong> {msg.message}
-          </div>
-        ))}
-      </div>
-      <input
-        type="text"
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-        placeholder="Type your message..."
-      />
-      <button onClick={handleSendMessage}>Send</button>
-    </div>
+    <Card className="relative h-[calc(100svh-6rem)] min-w-[25rem]">
+      <CardHeader className="z-10 w-full bg-background">
+        <CardTitle>{disasterId}</CardTitle>
+      </CardHeader>
+      <ScrollArea className="z-0 mb-10 h-[85%]" ref={scrollRef}>
+        <CardContent>
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className="my-2 flex max-w-[75%] flex-col gap-1 rounded-lg bg-slate-800 p-2"
+            >
+              <strong>{msg.sender}</strong>
+              <p className="font-thin">{msg.message}</p>
+            </div>
+          ))}
+        </CardContent>
+      </ScrollArea>
+
+      <CardFooter className="absolute bottom-0 flex w-full items-center justify-center gap-1 bg-background">
+        <Input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+          placeholder="Type your message..."
+          className="w-full"
+        />
+        <Button onClick={handleSendMessage}>Send</Button>
+      </CardFooter>
+    </Card>
   );
 }
