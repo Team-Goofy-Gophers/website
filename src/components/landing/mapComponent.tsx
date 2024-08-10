@@ -29,7 +29,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
           <Map
             className={`${props.className}`}
             defaultZoom={13}
-            defaultCenter={{ lat: 0, lng: 0 }}
+            defaultCenter={{ lat: coords.latitude, lng: coords.longitude }}
             onCameraChanged={(ev: MapCameraChangedEvent) =>
               console.log(
                 "camera changed:",
