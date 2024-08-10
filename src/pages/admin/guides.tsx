@@ -1,6 +1,11 @@
 import type { Guide } from "@prisma/client";
+import { Trash2Icon } from "lucide-react";
+import {
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -18,23 +23,42 @@ import { api } from "~/utils/api";
 
 export default function Guides() {
   const allGuides = api.guides.getAllGuides.useQuery();
-  const [currentGuide, setCurrentGuide] = useState<Guide | null>(null);
+  const [currentGuide, setCurrentGuide] = useState<Guide>({
+    id: "",
+    title: "",
+    data: "",
+    images: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
   const [data, setData] = useState<string>("");
-  const [title, setTitile] = useState<string>("");
   const [newGuide, setNewGuide] = useState<boolean>(false);
-  const [images, setImages] = useState<string[]>([]);
 
   const createGuide = api.guides.addGuide.useMutation({
     onSuccess: async () => {
       await allGuides.refetch();
-      setCurrentGuide(null);
+      setCurrentGuide({
+        id: "",
+        title: "",
+        data: "",
+        images: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
       setData("");
     },
   });
   const updateGuide = api.guides.updateGuide.useMutation({
     onSuccess: async () => {
       await allGuides.refetch();
-      setCurrentGuide(null);
+      setCurrentGuide({
+        id: "",
+        title: "",
+        data: "",
+        images: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
       setData("");
     },
   });
@@ -83,6 +107,73 @@ export default function Guides() {
           <CarouselNext />
         </Carousel>
 
+        <Card className="relative w-full">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Gallery</CardTitle>
+            <CldUploadButton
+              onSuccess={(res: CloudinaryUploadWidgetResults) => {
+                setCurrentGuide({
+                  ...currentGuide,
+                  images: currentGuide.images.concat(
+                    //@ts-expect-error nothing
+                    res?.info.secure_url as string,
+                  ),
+                });
+              }}
+              uploadPreset="ot0jbym5"
+              className="rounded-lg bg-black px-4 py-2 text-white dark:bg-white dark:text-black"
+            >
+              Add Image
+            </CldUploadButton>
+          </CardHeader>
+
+          <CardContent className="flex w-full justify-center">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full max-w-6xl"
+            >
+              <CarouselContent>
+                {currentGuide?.images.map((url, index) => (
+                  <CarouselItem key={index} className="relative">
+                    <div>
+                      <Card>
+                        <CardContent className="aspect-auto">
+                          <Image
+                            src={url}
+                            width={200}
+                            height={200}
+                            alt={`${index}`}
+                            className="h-[10rem] w-[20rem] object-cover"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    <span
+                      className="absolute right-5 top-3 cursor-pointer rounded-full bg-red-500 p-4"
+                      onClick={() => {
+                        setCurrentGuide({
+                          ...currentGuide,
+                          images: currentGuide.images.filter(
+                            (_, i) => i !== index,
+                          ),
+                        });
+                      }}
+                    >
+                      <Trash2Icon size={20} />
+                    </span>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </CardContent>
+        </Card>
+
         {currentGuide && !newGuide && (
           <>
             <Editor setText={setData} text={data} />
@@ -92,6 +183,7 @@ export default function Guides() {
                   id: currentGuide.id,
                   title: currentGuide.title,
                   data,
+                  images: currentGuide.images,
                 });
               }}
             >
@@ -105,15 +197,20 @@ export default function Guides() {
             <div className="flex max-w-2xl flex-col gap-4">
               <Input
                 onChange={(e) => {
-                  setTitile(e.target.value);
+                  setCurrentGuide({ ...currentGuide, title: e.target.value });
                 }}
-                value={title}
+                value={currentGuide.title}
                 placeholder="Title"
               />
               <Editor setText={setData} text={data} />
               <Button
                 onClick={async () => {
-                  await createGuide.mutateAsync({ title, data });
+                  if (currentGuide.title === "") return;
+                  await createGuide.mutateAsync({
+                    title: currentGuide.title,
+                    data,
+                    images: currentGuide.images,
+                  });
                 }}
               >
                 Create
@@ -125,7 +222,14 @@ export default function Guides() {
         <Button
           onClick={() => {
             setNewGuide(true);
-            setCurrentGuide(null);
+            setCurrentGuide({
+              id: "",
+              title: "",
+              data: "",
+              images: [],
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            });
             setData("");
           }}
           className="absolute bottom-5 right-5 flex items-center justify-center"
