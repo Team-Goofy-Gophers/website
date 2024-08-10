@@ -4,6 +4,7 @@ import React, { type ReactNode, type FunctionComponent } from "react";
 import { Toaster } from "sonner";
 import { boolean } from "zod";
 import NavBar from "~/components/layout/navbar";
+import Footer from "~/components/layout/footer";
 
 import { useLoading } from "~/hooks";
 
@@ -42,7 +43,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
             children
           )}
         </main>
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </div>
   );
