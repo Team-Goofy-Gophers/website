@@ -1,13 +1,8 @@
-import {
-  Map,
-  type MapCameraChangedEvent,
-  Marker,
-} from "@vis.gl/react-google-maps";
-import { act, forwardRef, useEffect, useRef, useState } from "react";
+import { Map, Marker } from "@vis.gl/react-google-maps";
+import { forwardRef, type ReactNode, useEffect, useRef, useState } from "react";
 import { useGeolocated } from "react-geolocated";
 
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
 
 import AddDisasterReportExisting from "~/components/admin/disaster/addDisasterExisting";
 import AddDisasterReportNew from "~/components/admin/disaster/addDisasterNew";
@@ -17,11 +12,12 @@ import { api } from "~/utils/api";
 
 interface MapComponentProps {
   className?: string;
-  onChatClick: () => void;
+  onChatClick: (disasterId: string) => void;
+  customChat?: ReactNode;
 }
 
 const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
-  ({ onChatClick, className }, ref) => {
+  ({ onChatClick, className, customChat }, ref) => {
     const [activeMarker, setActiveMarker] = useState<{
       id: number;
       lat: number;
@@ -141,17 +137,17 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                   }}
                   onMouseOver={(e) => {
                     setActiveMarker(marker);
-                    console.log(markers);
                     if (tooltipRef.current) {
                       tooltipRef.current.style.display = "flex";
                       tooltipRef.current.style.left = `${(e.domEvent as { clientX: number }).clientX}px`;
                       tooltipRef.current.style.top = `${(e.domEvent as { clientY: number }).clientY}px`;
                     }
                   }}
-                  onMouseOut={(e) => {
-                    console.log(e);
-                    if (tooltipRef.current)
-                      tooltipRef.current.style.display = "hidden";
+                  onMouseOut={() => {
+                    setTimeout(() => {
+                      if (tooltipRef.current)
+                        tooltipRef.current.style.display = "none";
+                    }, 5000);
                   }}
                   position={{ lat: marker.lat, lng: marker.lng }}
                 />
@@ -174,16 +170,25 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
         </div>
         <div
           ref={tooltipRef}
-          className="fixed hidden -translate-x-2/4 -translate-y-[150%] flex-col gap-3 rounded-2xl bg-background/85 p-2 transition-all duration-1000"
+          className="fixed hidden -translate-x-2/4 -translate-y-[140%] flex-col gap-3 rounded-2xl bg-background/85 p-2 transition-all duration-1000"
         >
-          <Button onClick={onChatClick}>Chat</Button>
-
           {activeMarker?.disasterId ? (
-            <AddDisasterReportExisting
-              disasterId={activeMarker.disasterId}
-              lat={activeMarker.lat}
-              long={activeMarker.lng}
-            />
+            <>
+              {customChat ?? (
+                <Button
+                  onClick={() => {
+                    onChatClick(activeMarker.disasterId!);
+                  }}
+                >
+                  Chat
+                </Button>
+              )}
+              <AddDisasterReportExisting
+                disasterId={activeMarker.disasterId}
+                lat={activeMarker.lat}
+                long={activeMarker.lng}
+              />
+            </>
           ) : (
             activeMarker && (
               <AddDisasterReportNew
