@@ -119,6 +119,7 @@ export default function Guides() {
                     res?.info.secure_url as string,
                   ),
                 });
+                console.log(res);
               }}
               uploadPreset="ot0jbym5"
               className="rounded-lg bg-black px-4 py-2 text-white dark:bg-white dark:text-black"
@@ -182,7 +183,7 @@ export default function Guides() {
                 await updateGuide.mutateAsync({
                   id: currentGuide.id,
                   title: currentGuide.title,
-                  data,
+                  data: data,
                   images: currentGuide.images,
                 });
               }}
