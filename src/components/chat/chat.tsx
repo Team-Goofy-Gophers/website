@@ -15,7 +15,13 @@ import {
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 
-export default function Chat({ disasterId }: { disasterId: string }) {
+export default function Chat({
+  disasterId,
+  className,
+}: {
+  disasterId: string;
+  className?: string;
+}) {
   const [messages, setMessages] = useState<
     { id: string; message: string; sender: string; senderId: string }[]
   >([]);
