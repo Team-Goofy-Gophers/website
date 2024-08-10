@@ -168,6 +168,26 @@ export default function Guides() {
                     </span>
                   </CarouselItem>
                 ))}
+
+                <CarouselItem>
+                  <Card
+                    onClick={() => {
+                      setNewGuide(true);
+                      setCurrentGuide({
+                        id: "",
+                        title: "",
+                        data: "",
+                        images: [],
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                      });
+                      setData("");
+                    }}
+                    className="absolute bottom-5 right-5 flex items-center justify-center"
+                  >
+                    <CardContent>Add New Guide</CardContent>
+                  </Card>
+                </CarouselItem>
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
@@ -219,24 +239,6 @@ export default function Guides() {
             </div>
           </>
         )}
-
-        <Button
-          onClick={() => {
-            setNewGuide(true);
-            setCurrentGuide({
-              id: "",
-              title: "",
-              data: "",
-              images: [],
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            });
-            setData("");
-          }}
-          className="absolute bottom-5 right-5 flex items-center justify-center"
-        >
-          Add New Guide
-        </Button>
       </div>
     </>
   );

@@ -44,7 +44,7 @@ const generatorConfig = {
 const GuideInput = z.object({
   language: z.string().optional().default("english"),
   disaster: z.string(),
-  phase: z.array(z.string()).optional().default(["before", "during", "after"]),
+  phase: z.string().optional().default("during"),
 });
 const promptInput = z.object({
   text: z.string().optional().default("What can you do?"),
