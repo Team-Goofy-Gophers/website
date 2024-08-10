@@ -135,19 +135,15 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                       updateMarkerPosition(marker.id, newLat, newLng);
                     }
                   }}
-                  onMouseOver={(e) => {
+                  onClick={(e) => {
                     setActiveMarker(marker);
                     if (tooltipRef.current) {
-                      tooltipRef.current.style.display = "flex";
+                      if (tooltipRef.current.style.display === "flex")
+                        tooltipRef.current.style.display = "none";
+                      else tooltipRef.current.style.display = "flex";
                       tooltipRef.current.style.left = `${(e.domEvent as { clientX: number }).clientX}px`;
                       tooltipRef.current.style.top = `${(e.domEvent as { clientY: number }).clientY}px`;
                     }
-                  }}
-                  onMouseOut={() => {
-                    setTimeout(() => {
-                      if (tooltipRef.current)
-                        tooltipRef.current.style.display = "none";
-                    }, 5000);
                   }}
                   position={{ lat: marker.lat, lng: marker.lng }}
                 />
