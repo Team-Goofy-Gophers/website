@@ -82,6 +82,8 @@ model Disaster {
 
     DisasterAlert DisasterAlert[]
 
+    Guide Guide[]
+
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     Message   Message[]
@@ -122,6 +124,9 @@ model Guide {
     title  String
     data   String
     images String[]
+
+    disasterId String
+    Disaster   Disaster @relation(fields: [disasterId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

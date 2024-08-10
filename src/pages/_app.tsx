@@ -6,6 +6,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import Layout from "~/components/layout";
+import AdminLayout from "~/components/layout/adminLayout";
 import { siteMetaData } from "~/constants";
 import { ThemeProvider } from "~/context/themeContext";
 import { env } from "~/env";
@@ -26,6 +27,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
         " | "
   }${siteMetaData.title}`;
 
+  const isAdminRoute = pathname.startsWith("/admin");
+
   return (
     <SessionProvider session={session}>
       <ThemeProvider
@@ -38,9 +41,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <Head>
             <title>{title}</title>
           </Head>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          {isAdminRoute ? (
+            <AdminLayout>
+              <Component {...pageProps} />
+            </AdminLayout>
+          ) : (
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          )}
         </APIProvider>
       </ThemeProvider>
     </SessionProvider>
