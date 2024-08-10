@@ -3,6 +3,7 @@ import { forwardRef, ReactHTMLElement, useState } from "react";
 import { useGeolocated } from "react-geolocated";
 
 import { env } from "~/env";
+import { cn } from "~/lib/utils";
 
 interface MapComponentProps {
   className?: string;
@@ -24,7 +25,18 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
         {!isGeolocationAvailable ? (
           <div>Browser does not support</div>
         ) : !isGeolocationEnabled ? (
-          <div>Geolocation is not enabled</div>
+          <div
+            className={cn(
+              props.className,
+              "bg-[url(https://th.bing.com/th/id/OIP.-QuVfq51mN6d80MDH16pUQHaD4?rs=1&pid=ImgDetMain)]",
+              "relative flex items-center justify-center bg-cover bg-center bg-no-repeat text-xl font-semibold",
+            )}
+          >
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="z-50 text-background">
+              Geolocation is not enabled
+            </div>
+          </div>
         ) : coords ? (
           <Map
             className={`${props.className}`}
@@ -40,7 +52,18 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
             }
           ></Map>
         ) : (
-          <div>Getting the location load</div>
+          <div
+            className={cn(
+              props.className,
+              "bg-[url(https://th.bing.com/th/id/OIP.-QuVfq51mN6d80MDH16pUQHaD4?rs=1&pid=ImgDetMain)]",
+              "relative flex items-center justify-center bg-cover bg-center bg-no-repeat text-xl font-semibold",
+            )}
+          >
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="z-50 text-background">
+              Getting the location load
+            </div>
+          </div>
         )}
       </div>
     );
