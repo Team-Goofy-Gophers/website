@@ -1,10 +1,12 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { IoMdClose } from "react-icons/io";
+
 import { navItems } from "~/constants/nav-items";
-import Link from "next/link";
-import ThemeSwitch from "./theme-switch";
+
 import Profile from "./profile";
+import ThemeSwitch from "./theme-switch";
 
 export default function Drawer(props: {
   isOpen: boolean;
@@ -27,9 +29,10 @@ export default function Drawer(props: {
 
         {/* <!-- nav options --> */}
         <ul className="mt-24 flex flex-col gap-y-8 text-center">
-          {navItems.map((item) => {
+          {navItems.map((item, idx) => {
             return (
               <li
+                key={idx}
                 className={`${router.pathname === item.link ? "underline" : ""}`}
               >
                 <Link href={item.link}>{item.name}</Link>
@@ -39,9 +42,9 @@ export default function Drawer(props: {
         </ul>
 
         {/* <!-- profiles --> */}
-        <div className="mt-8 flex flex-col gap-4 w-full justify-center items-center">
-            <ThemeSwitch />
-            <Profile/>
+        <div className="mt-8 flex w-full flex-col items-center justify-center gap-4">
+          <ThemeSwitch />
+          <Profile />
         </div>
       </div>
     </>

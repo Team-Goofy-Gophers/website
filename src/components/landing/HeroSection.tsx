@@ -1,13 +1,15 @@
+import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
-import Chat from "../chat/chat";
-import { Button } from "../ui/button";
-import MapComponent from "./mapComponent";
+
 import {
   ResizablePanel,
   ResizablePanelGroup,
   ResizablePanelRef,
 } from "~/components/ui/resizable";
-import { X } from "lucide-react";
+
+import Chat from "../chat/chat";
+import { Button } from "../ui/button";
+import MapComponent from "./mapComponent";
 
 export default function HeroSection() {
   const mapRef = useRef<ResizablePanelRef>(null);
@@ -30,7 +32,13 @@ export default function HeroSection() {
           </div>
 
           <div className="mt-20 h-[calc(100vh-6rem)] md:hidden">
-            <MapComponent className="animate-scale h-[calc(100vh-6rem)] overflow-hidden rounded-md border-2 border-border" />
+            <MapComponent
+              onChatClick={() => {
+                mapRef.current?.collapse();
+                chatRef.current?.expand();
+              }}
+              className="h-[calc(100vh-6rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
+            />
           </div>
         </div>
 
@@ -48,7 +56,13 @@ export default function HeroSection() {
           </div>
         </ResizablePanel>
         <ResizablePanel collapsible={true} className="md:h-[calc(100vh-5rem)]">
-          <MapComponent className="animate-scale h-[calc(100vh-6rem)] overflow-hidden rounded-md border-2 border-border" />
+          <MapComponent
+            onChatClick={() => {
+              mapRef.current?.collapse();
+              chatRef.current?.expand();
+            }}
+            className="h-[calc(100vh-6rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
+          />
           {/* <Button
             className="absolute left-0 top-0"
             onClick={() => {
