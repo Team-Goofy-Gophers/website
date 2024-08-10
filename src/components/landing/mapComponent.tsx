@@ -1,7 +1,7 @@
 import {
   Map,
   type MapCameraChangedEvent,
-  AdvancedMarker,
+  Marker,
   Pin,
 } from "@vis.gl/react-google-maps";
 import { forwardRef, useEffect, useState } from "react";
@@ -28,10 +28,19 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
 
     const [markers, setMarkers] = useState<
       {
+        id: number;
         lat: number;
         lng: number;
       }[]
     >([]);
+
+    const updateMarkerPosition = (id:number, lat:number, lng:number) => {
+      setMarkers((prevMarkers) =>
+        prevMarkers.map((marker) =>
+          marker.id === id ? { ...marker, lat, lng } : marker,
+        ),
+      );
+    };
 
     useEffect(() => {
       setLat(coords?.latitude ?? 0);
@@ -59,34 +68,42 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
             className={`${props.className}`}
             defaultZoom={13}
             defaultCenter={{ lat: coords.latitude, lng: coords.longitude }}
-            onCameraChanged={(ev: MapCameraChangedEvent) =>
-              console.log(
-                "camera changed:",
-                ev.detail.center,
-                "zoom:",
-                ev.detail.zoom,
-              )
+            onCameraChanged={
+              (ev: MapCameraChangedEvent) => {
+                console.log("map move");
+              }
+              // console.log(
+              //   "camera changed:",
+              //   ev.detail.center,
+              //   "zoom:",
+              //   ev.detail.zoom,
+              // )
             }
             onClick={(ev) => {
               setMarkers([
                 ...markers,
                 {
+                  id: markers.length,
                   lat: ev?.detail?.latLng?.lat ?? 0,
                   lng: ev?.detail?.latLng?.lng ?? 0,
                 },
               ]);
             }}
           >
-            {markers.map((marker, index) => {
-              return (
-                <AdvancedMarker
-                  key={index}
-                  position={{ lat: marker.lat, lng: marker.lng }}
-                >
-                  <Pin borderColor={"#008080"} />
-                </AdvancedMarker>
-              );
-            })}
+            {markers.map((marker, index) => (
+              <Marker
+                draggable={true}
+                onDrag={(event) => {
+                  const newLat = event.latLng?.lat();
+                  const newLng = event.latLng?.lng();
+                  if (newLat !== undefined && newLng !== undefined) {
+                    updateMarkerPosition(marker.id, newLat, newLng);
+                  }
+                }}
+                key={index}
+                position={{ lat: marker.lat, lng: marker.lng }}
+              />
+            ))}
           </Map>
         ) : (
           <div
