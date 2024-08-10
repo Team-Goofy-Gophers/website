@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { type z } from "zod";
 
 import { Button } from "~/components/ui/button";
+import { ComboBox } from "~/components/ui/combobox";
 import {
   Dialog,
   DialogContent,
@@ -22,36 +23,51 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import { Slider } from "~/components/ui/slider";
+import { Textarea } from "~/components/ui/textarea";
 
+import { useLocationStore } from "~/store";
 import { api } from "~/utils/api";
-import { addDisasterZ } from "~/zod/disaster";
+import { addDisasterReportExistingZ } from "~/zod/disaster";
 
-const AddDisaster: FunctionComponent = () => {
+const AddDisasterReportExisting: FunctionComponent = () => {
+  const { lat, lng } = useLocationStore();
   const [open, setOpen] = useState(false);
 
-  const addDisaster = api.disaster.addDisaster.useMutation();
+  const { data } = api.disaster.getDisasterAlerts.useQuery({
+    lat: lat ?? 0,
+    long: lng ?? 0,
+    status: "ONGOING",
+  });
 
-  const formSchema = addDisasterZ;
+  const disasterAlerts = data?.map((ele) => ({
+    id: ele.id,
+    name: ele.Disaster.name,
+  }));
+
+  const addDisasterReportExisting =
+    api.disaster.addDisasterReportExisting.useMutation();
+
+  const formSchema = addDisasterReportExistingZ;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      intensity: 30,
+      description: "",
+      disasterAlertId: "",
+      status: "ONGOING",
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addDisaster.mutate(
+    addDisasterReportExisting.mutate(
       {
-        name: values.name,
-        intensity: values.intensity,
+        description: values.description,
+        status: values.status,
+        disasterAlertId: values.disasterAlertId,
       },
       {
         onSuccess: () => {
-          toast.success(`Disaster ${values.name} added successfully`);
+          toast.success(`Disaster reported successfully`);
           setOpen(false);
         },
         onError: (error) => {
@@ -73,43 +89,41 @@ const AddDisaster: FunctionComponent = () => {
       <DialogTrigger asChild>
         <Button>
           <LuPlus className="mr-2 size-5" />
-          Disaster
+          Report Disaster
         </Button>
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Add Disaster</DialogTitle>
+              <DialogTitle>Report Disaster</DialogTitle>
             </DialogHeader>
 
             <FormField
               control={form.control}
-              name="name"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Name" {...field} />
+                    <Textarea placeholder="Description" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="intensity"
+              name="disasterAlertId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Intensity</FormLabel>
+                  <FormLabel>Disaster</FormLabel>
                   <FormControl>
-                    <Slider
-                      min={1}
-                      max={100}
-                      step={1}
-                      value={[field.value]}
-                      onValueChange={(e) => field.onChange(e[0])}
+                    <ComboBox
+                      data={disasterAlerts ?? []}
+                      placeholder="Seacrh disasters..."
+                      value={field.value}
+                      setValue={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -117,10 +131,8 @@ const AddDisaster: FunctionComponent = () => {
               )}
             />
 
-            {/* TODO: images */}
-
             <DialogFooter>
-              <Button type="submit">Add</Button>
+              <Button type="submit">Report</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -129,4 +141,4 @@ const AddDisaster: FunctionComponent = () => {
   );
 };
 
-export default AddDisaster;
+export default AddDisasterReportExisting;

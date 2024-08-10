@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DisasterStatus } from "@prisma/client";
 import React, { useState, type FunctionComponent } from "react";
 import { useForm } from "react-hook-form";
 import { LuPlus } from "react-icons/lu";
@@ -6,6 +7,7 @@ import { toast } from "sonner";
 import { type z } from "zod";
 
 import { Button } from "~/components/ui/button";
+import { ComboBox } from "~/components/ui/combobox";
 import {
   Dialog,
   DialogContent,
@@ -22,13 +24,25 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 
+import { useLocationStore } from "~/store";
 import { api } from "~/utils/api";
 import { addDisasterReportNewZ } from "~/zod/disaster";
 
 const AddDisasterReportNew: FunctionComponent = () => {
+  const { lat, lng } = useLocationStore();
+
   const [open, setOpen] = useState(false);
+
+  const { data: disasters } = api.disaster.getAllDisasters.useQuery();
 
   const addDisasterReportNew = api.disaster.addDisasterReportNew.useMutation();
 
@@ -39,7 +53,8 @@ const AddDisasterReportNew: FunctionComponent = () => {
     defaultValues: {
       description: "",
       disasterId: "",
-      location: "",
+      lat: lat ?? 0,
+      long: lng ?? 0,
       status: "ONGOING",
     },
   });
@@ -48,7 +63,8 @@ const AddDisasterReportNew: FunctionComponent = () => {
     addDisasterReportNew.mutate(
       {
         description: values.description,
-        location: values.location,
+        lat: values.lat,
+        long: values.long,
         status: values.status,
         disasterId: values.disasterId,
       },
@@ -76,14 +92,14 @@ const AddDisasterReportNew: FunctionComponent = () => {
       <DialogTrigger asChild>
         <Button>
           <LuPlus className="mr-2 size-5" />
-          Product
+          Report Disaster
         </Button>
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Add Product</DialogTitle>
+              <DialogTitle>Report Disaster</DialogTitle>
             </DialogHeader>
 
             <FormField
@@ -99,11 +115,51 @@ const AddDisasterReportNew: FunctionComponent = () => {
                 </FormItem>
               )}
             />
-
-            {/* TODO: images */}
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <FormControl>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(DisasterStatus).map(([key, value]) => (
+                          <SelectItem key={key} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="disasterId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Disaster</FormLabel>
+                  <FormControl>
+                    <ComboBox
+                      data={disasters ?? []}
+                      placeholder="Search disaster..."
+                      value={field.value}
+                      setValue={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter>
-              <Button type="submit">Add</Button>
+              <Button type="submit">Report</Button>
             </DialogFooter>
           </form>
         </Form>

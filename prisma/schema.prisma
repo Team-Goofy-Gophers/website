@@ -25,7 +25,6 @@ model User {
     // User added
     role UserRole @default(USER)
     mmr  Int      @default(0) // > 0
-    rank Rank     @default(BRONZE)
 
     DisasterReport DisasterReport[]
 
@@ -92,8 +91,9 @@ model Disaster {
 model DisasterAlert {
     id          String         @id @default(cuid())
     description String
-    location    Json // GeoJson
-    status      DisasterStatus @default(ONGOING)
+    lat         Float
+    long        Float
+    status      DisasterStatus @default(UNRESOLVED)
 
     disasterId String
     Disaster   Disaster @relation(fields: [disasterId], references: [id], onDelete: Cascade)
@@ -151,18 +151,8 @@ enum UserRole {
 }
 
 enum DisasterStatus {
+    UNRESOLVED
     ONGOING
     RESOLVED
-}
-
-// Definitely not Rocket League
-enum Rank {
-    BRONZE
-    SILVER
-    GOLD
-    PLATINUM
-    DIAMOND
-    CHAMPION
-    GRAND_CHAMPION
-    SUPER_SONIC_LEGEND
+    FAKE
 }

@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { getMMRRatio, getRankFromMMR } from "~/utils/mmr";
+import { getMMRRatio } from "~/utils/mmr";
 import { addMMRZ, removeMMRZ } from "~/zod/mmr";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -28,15 +28,12 @@ const mmrRouter = createTRPCRouter({
           ? 2 * mmrRatio
           : 3 * mmrRatio;
 
-    const newRank = getRankFromMMR(user.mmr + additionalMMR);
-
     await ctx.db.user.update({
       where: {
         id: input.userId,
       },
       data: {
         mmr: user.mmr + additionalMMR,
-        rank: newRank,
       },
     });
   }),
@@ -65,15 +62,12 @@ const mmrRouter = createTRPCRouter({
             ? 2 * mmrRatio
             : 3 * mmrRatio;
 
-      const newRank = getRankFromMMR(user.mmr - additionalMMR);
-
       await ctx.db.user.update({
         where: {
           id: input.userId,
         },
         data: {
           mmr: user.mmr - additionalMMR,
-          rank: newRank,
         },
       });
     }),
