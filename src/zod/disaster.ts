@@ -1,3 +1,4 @@
+import { DisasterStatus } from "@prisma/client";
 import { z } from "zod";
 
 const addDisasterZ = z.object({
@@ -27,4 +28,26 @@ const deleteDisasterZ = z.object({
   id: z.string(),
 });
 
-export { addDisasterZ, getDisasterZ, updateDisasterZ, deleteDisasterZ };
+const addDisasterReportNewZ = z.object({
+  disaster: z.object({
+    id: z.string(),
+    location: z.string(),
+    description: z.string(),
+    status: z.nativeEnum(DisasterStatus),
+  }),
+});
+
+const addDisasterReportExistingZ = z.object({
+  description: z.string(),
+  status: z.nativeEnum(DisasterStatus),
+  disasterAlertId: z.string(),
+});
+
+export {
+  addDisasterZ,
+  getDisasterZ,
+  updateDisasterZ,
+  deleteDisasterZ,
+  addDisasterReportNewZ,
+  addDisasterReportExistingZ,
+};

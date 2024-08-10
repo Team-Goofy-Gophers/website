@@ -1,4 +1,11 @@
-import { addDisasterZ, getDisasterZ } from "~/zod/disaster";
+import {
+  addDisasterReportExistingZ,
+  addDisasterReportNewZ,
+  addDisasterZ,
+  deleteDisasterZ,
+  getDisasterZ,
+  updateDisasterZ,
+} from "~/zod/disaster";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 const disasterRouter = createTRPCRouter({
@@ -47,6 +54,55 @@ const disasterRouter = createTRPCRouter({
       await ctx.db.disaster.delete({
         where: {
           id: input.id,
+        },
+      });
+    }),
+
+  addDisasterReportNew: protectedProcedure
+    .input(addDisasterReportNewZ)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.disasterAlert.create({
+        data: {
+          description: input.disaster.description,
+          location: input.disaster.location,
+          status: input.disaster.status,
+          Disaster: {
+            connect: {
+              id: input.disaster.id,
+            },
+          },
+          DisasterReport: {
+            create: {
+              description: input.disaster.description,
+              status: input.disaster.status,
+              User: {
+                connect: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
+
+  addDisasterReportExisting: protectedProcedure
+    .input(addDisasterReportExistingZ)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.disasterReport.create({
+        data: {
+          description: input.description,
+          status: input.status,
+          User: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+          DisasterAlert: {
+            connect: {
+              id: input.disasterAlertId,
+            },
+          },
         },
       });
     }),
