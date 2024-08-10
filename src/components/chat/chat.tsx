@@ -97,7 +97,7 @@ export default function Chat({
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className="my-2 flex max-w-[75%] flex-col gap-1 rounded-lg bg-slate-800 p-2"
+              className="my-2 flex max-w-[75%] flex-col gap-1 rounded-lg border-2 border-primary/90 bg-primary/80 p-2 text-white"
             >
               <strong>{msg.sender}</strong>
               <p className="font-thin">{msg.message}</p>
@@ -113,7 +113,7 @@ export default function Chat({
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
           placeholder="Type your message..."
-          className="w-full"
+          className=""
         />
         <Button onClick={handleSendMessage}>Send</Button>
       </CardFooter>

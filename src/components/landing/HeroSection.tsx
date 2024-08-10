@@ -47,9 +47,9 @@ export default function HeroSection() {
             <h2>Help people in need through chat.</h2>
           </div>
         </ResizablePanel>
-        <ResizablePanel defaultSize={50} className="md:h-[calc(100vh-5rem)]">
+        <ResizablePanel collapsible={true} className="md:h-[calc(100vh-5rem)]">
           <MapComponent className="animate-scale h-[calc(100vh-6rem)] overflow-hidden rounded-md border-2 border-border" />
-          <Button
+          {/* <Button
             className="absolute left-0 top-0"
             onClick={() => {
               mapRef.current?.collapse();
@@ -57,16 +57,16 @@ export default function HeroSection() {
             }}
           >
             Resize
-          </Button>
+          </Button> */}
         </ResizablePanel>
         <ResizablePanel
           ref={chatRef}
           collapsible={true}
-          collapsedSize={0}
+          defaultSize={30}
           className="relative"
         >
           <Chat
-            disasterId="1"
+            disasterId="test"
             className="min-h-[calc(100vh-6rem)] rounded-lg border-2 border-border bg-foreground/50"
           />
           <X
