@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-export default function Home() {
-  return <>Home Page</>;
-=======
 import HeroSection from "~/components/landing/HeroSection";
 
 export default function Home() {
@@ -10,5 +6,4 @@ export default function Home() {
       <HeroSection />
     </>
   );
->>>>>>> Stashed changes
 }
