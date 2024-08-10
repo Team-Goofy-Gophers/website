@@ -92,8 +92,8 @@ model Disaster {
 model DisasterAlert {
     id          String         @id @default(cuid())
     description String
-    location    Json // GeoJson
-    status      DisasterStatus @default(ONGOING)
+    location    String // GeoJson
+    status      DisasterStatus @default(UNRESOLVED)
 
     disasterId String
     Disaster   Disaster @relation(fields: [disasterId], references: [id], onDelete: Cascade)
@@ -151,8 +151,10 @@ enum UserRole {
 }
 
 enum DisasterStatus {
+    UNRESOLVED
     ONGOING
     RESOLVED
+    FAKE
 }
 
 // Definitely not Rocket League

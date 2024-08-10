@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { type z } from "zod";
 
 import { Button } from "~/components/ui/button";
+import { ComboBox } from "~/components/ui/combobox";
 import {
   Dialog,
   DialogContent,
@@ -24,33 +25,45 @@ import {
 } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
 
+import { useLocationStore } from "~/store";
 import { api } from "~/utils/api";
-import { addDisasterReportNewZ } from "~/zod/disaster";
+import { addDisasterReportExistingZ } from "~/zod/disaster";
 
-const AddDisasterReportNew: FunctionComponent = () => {
+const AddDisasterReportExisting: FunctionComponent = () => {
+  const { lat, lng } = useLocationStore();
+
   const [open, setOpen] = useState(false);
 
-  const addDisasterReportNew = api.disaster.addDisasterReportNew.useMutation();
+  const { data } = api.disaster.getDisasterAlerts.useQuery({
+    location: `${lat}|${lng}`,
+    status: "ONGOING",
+  });
 
-  const formSchema = addDisasterReportNewZ;
+  const disasterAlerts = data?.map((ele) => ({
+    id: ele.id,
+    name: ele.Disaster.name,
+  }));
+
+  const addDisasterReportExisting =
+    api.disaster.addDisasterReportExisting.useMutation();
+
+  const formSchema = addDisasterReportExistingZ;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       description: "",
-      disasterId: "",
-      location: "",
+      disasterAlertId: "",
       status: "ONGOING",
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addDisasterReportNew.mutate(
+    addDisasterReportExisting.mutate(
       {
         description: values.description,
-        location: values.location,
         status: values.status,
-        disasterId: values.disasterId,
+        disasterAlertId: values.disasterAlertId,
       },
       {
         onSuccess: () => {
@@ -76,14 +89,14 @@ const AddDisasterReportNew: FunctionComponent = () => {
       <DialogTrigger asChild>
         <Button>
           <LuPlus className="mr-2 size-5" />
-          Product
+          Report Disaster
         </Button>
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Add Product</DialogTitle>
+              <DialogTitle>Report Disaster</DialogTitle>
             </DialogHeader>
 
             <FormField
@@ -99,11 +112,27 @@ const AddDisasterReportNew: FunctionComponent = () => {
                 </FormItem>
               )}
             />
-
-            {/* TODO: images */}
+            <FormField
+              control={form.control}
+              name="disasterAlertId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Disaster</FormLabel>
+                  <FormControl>
+                    <ComboBox
+                      data={disasterAlerts ?? []}
+                      placeholder="Seacrh disasters..."
+                      value={field.value}
+                      setValue={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter>
-              <Button type="submit">Add</Button>
+              <Button type="submit">Report</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -112,4 +141,4 @@ const AddDisasterReportNew: FunctionComponent = () => {
   );
 };
 
-export default AddDisasterReportNew;
+export default AddDisasterReportExisting;

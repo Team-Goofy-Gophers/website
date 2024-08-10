@@ -73,14 +73,14 @@ const AddDisaster: FunctionComponent = () => {
       <DialogTrigger asChild>
         <Button>
           <LuPlus className="mr-2 size-5" />
-          Product
+          Disaster
         </Button>
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <DialogHeader>
-              <DialogTitle>Add Product</DialogTitle>
+              <DialogTitle>Add Disaster</DialogTitle>
             </DialogHeader>
 
             <FormField

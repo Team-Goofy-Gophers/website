@@ -3,6 +3,7 @@ import {
   addDisasterReportNewZ,
   addDisasterZ,
   deleteDisasterZ,
+  getAllDisasterAlertsZ,
   getDisasterZ,
   updateDisasterZ,
 } from "~/zod/disaster";
@@ -59,10 +60,29 @@ const disasterRouter = createTRPCRouter({
       });
     }),
 
+  getDisasterAlerts: protectedProcedure
+    .input(getAllDisasterAlertsZ)
+    .query(async ({ ctx, input }) => {
+      // TOD) implement location radius
+      return await ctx.db.disasterAlert.findMany({
+        where: {
+          status:
+            typeof input.status === "string"
+              ? input.status
+              : {
+                  in: input.status,
+                },
+        },
+        include: {
+          Disaster: true,
+        },
+      });
+    }),
+
   addDisasterReportNew: protectedProcedure
     .input(addDisasterReportNewZ)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.disasterAlert.create({
+      const report = await ctx.db.disasterAlert.create({
         data: {
           description: input.description,
           location: input.location,
@@ -83,6 +103,15 @@ const disasterRouter = createTRPCRouter({
               },
             },
           },
+        },
+      });
+
+      const disasterAlert = await ctx.db.disasterAlert.findUnique({
+        where: {
+          id: report.id,
+        },
+        include: {
+          Disaster: true,
         },
       });
     }),
