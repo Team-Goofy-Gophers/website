@@ -15,7 +15,7 @@ export default function Drawer(props: {
   return (
     <>
       <div
-        className={`fixed right-0 z-50 h-screen w-[300px] transform border-l-2 bg-background text-foreground transition-transform duration-500 ease-in-out ${
+        className={`fixed right-0 top-0 z-50 h-screen w-[300px] transform border-l-2 bg-background text-foreground transition-transform duration-500 ease-in-out ${
           props.isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
