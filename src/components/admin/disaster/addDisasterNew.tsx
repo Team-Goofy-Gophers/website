@@ -33,13 +33,13 @@ import {
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 
-import { useLocationStore } from "~/store";
 import { api } from "~/utils/api";
 import { addDisasterReportNewZ } from "~/zod/disaster";
 
-const AddDisasterReportNew: FunctionComponent = () => {
-  const { lat, lng } = useLocationStore();
-
+const AddDisasterReportNew: FunctionComponent<{
+  lat: number;
+  long: number;
+}> = ({ lat, long }) => {
   const [open, setOpen] = useState(false);
 
   const { data: disasters } = api.disaster.getAllDisasters.useQuery();
@@ -53,8 +53,8 @@ const AddDisasterReportNew: FunctionComponent = () => {
     defaultValues: {
       description: "",
       disasterId: "",
-      lat: lat ?? 0,
-      long: lng ?? 0,
+      lat: lat,
+      long: long,
       status: "ONGOING",
     },
   });
@@ -127,11 +127,12 @@ const AddDisasterReportNew: FunctionComponent = () => {
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.entries(DisasterStatus).map(([key, value]) => (
-                          <SelectItem key={key} value={value}>
-                            {value}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value={DisasterStatus.ONGOING}>
+                          {DisasterStatus.ONGOING}
+                        </SelectItem>
+                        <SelectItem value={DisasterStatus.RESOLVED}>
+                          {DisasterStatus.RESOLVED}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
