@@ -24,7 +24,7 @@ model User {
 
     // User added
     role UserRole @default(USER)
-    mmr  Int      @default(0) // > 0
+    mmr  Int      @default(700) // > 0
 
     DisasterReport DisasterReport[]
 
@@ -91,7 +91,7 @@ model DisasterAlert {
     description        String
     lat                Float
     long               Float
-    status             DisasterStatus @default(UNRESOLVED)
+    status             DisasterStatus @default(UNRELIABLE)
     totalSupportAmount Int            @default(0)
 
     disasterId String
@@ -162,7 +162,7 @@ enum UserRole {
 }
 
 enum DisasterStatus {
-    UNRESOLVED
+    UNRELIABLE
     ONGOING
     RESOLVED
     FAKE
