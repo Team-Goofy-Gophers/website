@@ -83,7 +83,7 @@ export default function NavBar() {
 
           {/* <!-- profiles --> */}
           <div className="hidden w-fit items-center gap-4 lg:flex">
-            <ThemeSwitch />
+            {/* <ThemeSwitch />s */}
             <Profile />
           </div>
 

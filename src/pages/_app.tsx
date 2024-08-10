@@ -30,8 +30,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
-        enableSystem
+        defaultTheme="light"
         disableTransitionOnChange
       >
         <APIProvider apiKey={env.NEXT_PUBLIC_MAPS_API_KEY}>

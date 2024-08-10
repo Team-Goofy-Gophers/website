@@ -33,7 +33,7 @@ const GuideSection = () => {
                 <h1 className="w-full text-center text-3xl font-bold">
                   {guide.title}
                 </h1>
-                <p>{guide.data}</p>
+                <p dangerouslySetInnerHTML={{ __html: guide.data }}></p>
               </div>
             </CarouselItem>
           ))}

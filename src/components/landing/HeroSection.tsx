@@ -35,7 +35,7 @@ export default function HeroSection() {
     <>
       <ResizablePanelGroup
         direction="horizontal"
-        className="flex h-fit w-screen flex-col md:min-h-[calc(100vh-5rem)] md:flex-row md:items-center md:gap-2 md:px-2"
+        className="flex h-fit w-screen flex-col md:min-h-[calc(100vh-5rem)] md:flex-row md:items-center md:gap-2 md:px-20"
       >
         <div className="flex h-fit w-screen flex-col justify-center gap-4 bg-card py-20 text-center md:hidden">
           <h1 className="text-4xl font-bold">Goofy Goofers</h1>
@@ -60,7 +60,7 @@ export default function HeroSection() {
                 onChatClick={(id) => {
                   setCurrDisasterId(id);
                 }}
-                className="h-[calc(100vh-1rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
+                className="animate-scale h-[calc(100vh-1rem)] overflow-hidden rounded-md border-2 border-border"
               />
               <DrawerContent ref={chatDrawerRef}>
                 <Chat
@@ -92,7 +92,7 @@ export default function HeroSection() {
               chatRef.current?.expand();
               setCurrDisasterId(id);
             }}
-            className="h-[calc(100vh-6rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
+            className="animate-scale h-[calc(100vh-6rem)] overflow-hidden rounded-md border-2 border-border"
           />
         </ResizablePanel>
         <ResizablePanel
