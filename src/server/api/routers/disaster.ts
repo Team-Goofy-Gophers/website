@@ -64,18 +64,18 @@ const disasterRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.disasterAlert.create({
         data: {
-          description: input.disaster.description,
-          location: input.disaster.location,
-          status: input.disaster.status,
+          description: input.description,
+          location: input.location,
+          status: input.status,
           Disaster: {
             connect: {
-              id: input.disaster.id,
+              id: input.disasterId,
             },
           },
           DisasterReport: {
             create: {
-              description: input.disaster.description,
-              status: input.disaster.status,
+              description: input.description,
+              status: input.status,
               User: {
                 connect: {
                   id: ctx.session.user.id,

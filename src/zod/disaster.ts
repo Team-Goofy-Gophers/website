@@ -2,7 +2,7 @@ import { DisasterStatus } from "@prisma/client";
 import { z } from "zod";
 
 const addDisasterZ = z.object({
-  name: z.string(),
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
   intensity: z
     .number()
     .refine((intensity) => intensity >= 0 && intensity <= 100, {
@@ -29,12 +29,10 @@ const deleteDisasterZ = z.object({
 });
 
 const addDisasterReportNewZ = z.object({
-  disaster: z.object({
-    id: z.string(),
-    location: z.string(),
-    description: z.string(),
-    status: z.nativeEnum(DisasterStatus),
-  }),
+  disasterId: z.string(),
+  location: z.string(),
+  description: z.string(),
+  status: z.nativeEnum(DisasterStatus),
 });
 
 const addDisasterReportExistingZ = z.object({

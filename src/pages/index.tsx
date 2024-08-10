@@ -1,6 +1,8 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import HeroSection from "~/components/landing/HeroSection";
+
 import { Button } from "~/components/ui/button";
+
+import HeroSection from "~/components/landing/HeroSection";
 
 export default function Home() {
   const { data: session } = useSession();
