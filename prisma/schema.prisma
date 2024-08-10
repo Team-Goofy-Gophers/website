@@ -1,0 +1,148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["omitApi"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    // Needed for auth
+    id            String    @id @default(cuid())
+    name          String?
+    email         String    @unique
+    emailVerified DateTime?
+    image         String?
+
+    accounts Account[]
+    sessions Session[]
+
+    // User added
+    role UserRole @default(USER)
+    mmr  Int      @default(0) // > 0
+    rank Rank     @default(BRONZE)
+
+    DisasterReport DisasterReport[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Account {
+    type              String
+    providerAccountId String
+    provider          String
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@id([provider, providerAccountId])
+}
+
+model Session {
+    sessionToken String   @unique
+    expires      DateTime
+    userId       String
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+    identifier String
+    token      String
+    expires    DateTime
+
+    @@id([identifier, token])
+}
+
+// Base Model
+model Disaster {
+    id        String   @id @default(cuid())
+    name      String
+    intensity Float // 0-100
+    images    String[]
+
+    DisasterAlert DisasterAlert[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model DisasterAlert {
+    id          String         @id @default(cuid())
+    description String
+    location    Json // GeoJson
+    status      DisasterStatus @default(ONGOING)
+
+    disasterId String
+    Disaster   Disaster @relation(fields: [disasterId], references: [id], onDelete: Cascade)
+
+    DisasterReport DisasterReport[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model DisasterReport {
+    id          String         @id @default(cuid())
+    description String
+    status      DisasterStatus @default(ONGOING)
+
+    disasterAlertId String
+    DisasterAlert   DisasterAlert @relation(fields: [disasterAlertId], references: [id])
+
+    userId String
+    User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Guide {
+    id     String   @id @default(cuid())
+    title  String
+    data   String
+    images String[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
+
+enum DisasterStatus {
+    ONGOING
+    RESOLVED
+}
+
+// Definitely not Rocket League
+enum Rank {
+    BRONZE
+    SILVER
+    GOLD
+    PLATINUM
+    DIAMOND
+    CHAMPION
+    GRAND_CHAMPION
+    SUPER_SONIC_LEGEND
+}
