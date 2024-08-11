@@ -55,7 +55,7 @@ export default function NavBar() {
             Astero
           </Link>
 
-          <ul className="hidden justify-center gap-4 text-lg lg:flex">
+          <ul className="hidden items-center justify-center gap-4 text-lg lg:flex">
             {navItems.map((item, idx) => {
               return (
                 <li
@@ -66,17 +66,21 @@ export default function NavBar() {
                 </li>
               );
             })}
-            {session?.user.role === "ADMIN" &&
-              adminNavItems.map((item, idx) => {
-                return (
-                  <li
-                    key={idx}
-                    className={`${router.pathname === item.link ? "underline" : ""}`}
-                  >
-                    <Link href={item.link}>{item.name}</Link>
-                  </li>
-                );
-              })}
+            <div className="flex gap-4 rounded-md border-2 border-foreground/50 px-4 py-2 text-sm">
+              {session?.user.role === "ADMIN" &&
+                adminNavItems.map((item, idx) => {
+                  return (
+                    <li
+                      key={idx}
+                      className={`${router.pathname === item.link ? "underline" : ""}`}
+                    >
+                      <Link href={item.link} className="font-medium">
+                        admin/{item.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+            </div>
           </ul>
 
           <div className="hidden w-fit items-center gap-4 lg:flex">

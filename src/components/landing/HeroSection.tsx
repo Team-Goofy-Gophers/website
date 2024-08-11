@@ -75,24 +75,37 @@ export default function HeroSection() {
           collapsible={true}
           collapsedSize={0}
           defaultSize={50}
-          className="hidden h-[100svh] w-1/2 flex-col justify-center gap-4 text-center md:flex"
+          className="hidden h-[100svh] w-1/2 flex-col justify-center gap-8 text-center md:flex"
         >
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="text-7xl font-bold"
+            className="pl-6 text-left text-7xl font-bold"
           >
             Astero
+            <h1 className="mt-2 text-xl font-normal">
+              Be a saviour to the people around you
+            </h1>
           </motion.h1>
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
             className="mx-8 text-2xl font-normal"
           >
-            <h2>Get to know the disasters around you.</h2>
-            <h2>Help people in need through chat.</h2>
+            <div className="text-left text-xl">
+              <h1 className="text-2xl font-bold">The features</h1>
+              <ul className="list-disc pl-5">
+                <li>Get to know the disasters around you.</li>
+                <li>Report disasters at the earliest and earn points.</li>
+                <li>Help people in need through proximity-chat and charity.</li>
+                <li>Ask GopherAI for information and help.</li>
+                <li>Read our Guides to be disaster-ready.</li>
+                <li>A mulitlingual AI to answer your questions on the go.</li>
+              </ul>
+            </div>
           </motion.div>
         </ResizablePanel>
         <ResizablePanel collapsible={true}>

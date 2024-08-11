@@ -82,7 +82,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
     return (
       <div ref={ref}>
         {!isGeolocationAvailable ? (
-          <div>Browser does not support</div>
+          <div>Browser does not support.</div>
         ) : !isGeolocationEnabled ? (
           <div
             className={cn(
@@ -93,7 +93,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
           >
             <div className="absolute inset-0 bg-black opacity-50"></div>
             <div className="z-50 text-background">
-              Geolocation is not enabled
+              Geolocation is not enabled.
             </div>
           </div>
         ) : coords ? (
@@ -138,9 +138,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
             )}
           >
             <div className="absolute inset-0 bg-black opacity-50"></div>
-            <div className="z-50 text-background">
-              Getting the location load
-            </div>
+            <div className="z-50 text-background">Fetching location...</div>
           </div>
         )}
       </div>

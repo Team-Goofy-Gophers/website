@@ -16,13 +16,13 @@ export const navItems = [
 export const adminNavItems = [
   {
     id: 1,
-    name: "a/Disaster",
+    name: "disaster",
     link: "/admin/disaster",
     icon: "",
   },
   {
     id: 2,
-    name: "a/Guides",
+    name: "guides",
     link: "/admin/guides",
     icon: "",
   },
