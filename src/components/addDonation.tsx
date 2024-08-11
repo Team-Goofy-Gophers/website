@@ -38,9 +38,10 @@ const AddDonation: FunctionComponent<{
 }> = ({ disasterId }) => {
   const [open, setOpen] = useState(false);
 
-  const { data: supportAmount } = api.support.getSupportAmount.useQuery({
-    disasterId,
-  });
+  const { data: supportAmount, refetch } =
+    api.support.getSupportAmount.useQuery({
+      disasterId,
+    });
 
   const addDonation = api.support.submitSupport.useMutation();
 
@@ -63,6 +64,7 @@ const AddDonation: FunctionComponent<{
       },
       {
         onSuccess: () => {
+          refetch().then().catch(console.error);
           toast.success(`Amount ${values.amount} donated to disaster`);
           setOpen(false);
         },
@@ -73,8 +75,6 @@ const AddDonation: FunctionComponent<{
       },
     );
   };
-
-  console.log(form.formState.errors);
 
   return (
     <Dialog

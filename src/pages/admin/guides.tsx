@@ -43,14 +43,14 @@ export default function Guides() {
   });
   return (
     <>
-      <div className="container flex h-[90svh] w-fit flex-col items-center justify-center gap-2 pt-[10svh]">
-        <Card className="w-full">
+      <div className="container flex h-[90svh] w-full flex-col items-center justify-center gap-2 pt-[10svh]">
+        <Card className="w-1/2">
           <CardHeader>
             <CardTitle>Guides</CardTitle>
           </CardHeader>
 
-          <CardContent>
-            <div className="flex flex-col">
+          <CardContent className="min-w-sm">
+            <div className="flex w-full flex-col">
               {allGuides.data?.map((guide, index) => (
                 <h3
                   key={index}

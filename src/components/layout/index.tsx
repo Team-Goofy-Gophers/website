@@ -1,6 +1,5 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
 import React, { type ReactNode, type FunctionComponent } from "react";
 import { Toaster } from "sonner";
 
@@ -10,10 +9,11 @@ import NavBar from "~/components/layout/navbar";
 import Loader from "~/components/loader";
 import { useLoading } from "~/hooks";
 
+import GopherAI from "../gopherAI";
+
 const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   const { status, data: session } = useSession();
   const pathname = usePathname();
-  const router = useRouter();
 
   const loading = useLoading();
 
@@ -34,7 +34,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
     return <Unauthorized user={session.user} />;
 
   return (
-    <div className="magicpattern flex h-screen w-screen">
+    <div className="flex h-screen w-screen">
       <Toaster />
       <div className="h-full w-full">
         <NavBar />
@@ -47,6 +47,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
             children
           )}
         </main>
+        <GopherAI />
         <Footer />
       </div>
     </div>

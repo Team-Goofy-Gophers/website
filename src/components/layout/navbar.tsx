@@ -11,9 +11,10 @@ import { api } from "~/utils/api";
 import { Badge } from "../ui/badge";
 import Drawer from "./drawer";
 import Profile from "./profile";
-import ThemeSwitch from "./theme-switch";
 
 export default function NavBar() {
+  const { data: session } = useSession();
+
   const router = useRouter();
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -65,10 +66,21 @@ export default function NavBar() {
                 </li>
               );
             })}
+            {session?.user.role === "ADMIN" &&
+              adminNavItems.map((item, idx) => {
+                return (
+                  <li
+                    key={idx}
+                    className={`${router.pathname === item.link ? "underline" : ""}`}
+                  >
+                    <Link href={item.link}>{item.name}</Link>
+                  </li>
+                );
+              })}
           </ul>
 
           <div className="hidden w-fit items-center gap-4 lg:flex">
-            <Badge>{data?.mmr ?? 0}</Badge>
+            {data && <Badge>{data?.mmr ?? 0}</Badge>}
             <Profile />
           </div>
 
