@@ -20,27 +20,31 @@ const GuideSection = () => {
 
   return (
     <>
-      <div className="my-auto flex h-[90svh] w-full gap-4 pt-[10svh]">
-        <Card className="flex h-full w-full flex-row gap-4 overflow-y-scroll p-6 md:w-1/3 md:flex-col">
-          <h1 className="text-center text-2xl font-bold">Guides</h1>
-          {guides?.map((g, index) => (
-            <Card key={index} onClick={() => setCurrentGuide(g)}>
-              <CardHeader>{g.title}</CardHeader>
-              <CardContent>
-                <Image
-                  src={
-                    g.images[0]
-                      ? g.images[0]
-                      : "/images/profile-placeholder.png"
-                  }
-                  alt={g.title}
-                  width={300}
-                  height={300}
-                  className="aspect-video h-48 w-full rounded-lg object-cover"
-                />
-              </CardContent>
-            </Card>
-          ))}
+      <div className="my-auto flex h-[90svh] w-full flex-col gap-4 pt-[10svh] md:flex-row">
+        <Card className="h-full w-full gap-4 overflow-y-scroll p-6 md:w-1/3">
+          <CardHeader>
+            <h1 className="text-center text-2xl font-bold">Guides</h1>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            {guides?.map((g, index) => (
+              <Card key={index} onClick={() => setCurrentGuide(g)}>
+                <CardHeader>{g.title}</CardHeader>
+                <CardContent>
+                  <Image
+                    src={
+                      g.images[0]
+                        ? g.images[0]
+                        : "/images/profile-placeholder.png"
+                    }
+                    alt={g.title}
+                    width={300}
+                    height={300}
+                    className="aspect-video h-48 w-full rounded-lg object-cover"
+                  />
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
         </Card>
 
         <Card className="h-full w-full overflow-y-scroll md:w-2/3">
