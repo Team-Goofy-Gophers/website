@@ -8,6 +8,7 @@ import React, { createElement, useCallback, useState } from "react";
 
 import { Button } from "~/components/ui/button";
 
+import AddDonation from "~/components/addDonation";
 import AddDisasterReportExisting from "~/components/admin/disaster/addDisasterExisting";
 import AddDisasterReportNew from "~/components/admin/disaster/addDisasterNew";
 import { type MarkerType } from "~/components/landing/mapComponent";
@@ -97,11 +98,14 @@ const CustomMarker: React.FC<{
                 </Button>
               )}
               {activeMarker.disasterId && (
-                <AddDisasterReportExisting
-                  disasterId={activeMarker.disasterId}
-                  lat={activeMarker.lat}
-                  long={activeMarker.lng}
-                />
+                <>
+                  <AddDisasterReportExisting
+                    disasterId={activeMarker.disasterId}
+                    lat={activeMarker.lat}
+                    long={activeMarker.lng}
+                  />
+                  <AddDonation disasterId={activeMarker.disasterId} />
+                </>
               )}
             </>
           ) : (
