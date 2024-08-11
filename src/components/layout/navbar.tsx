@@ -51,7 +51,10 @@ export default function NavBar() {
         className="fixed z-50 flex h-16 w-full flex-row items-center justify-center border-b bg-background py-2 text-foreground shadow-xl"
       >
         <div className="flex w-full flex-row items-center justify-between px-6">
-          <Link href="/" className="text-xl font-bold hover:cursor-pointer notranslate">
+          <Link
+            href="/"
+            className="notranslate text-xl font-bold hover:cursor-pointer"
+          >
             Astero
           </Link>
 
@@ -66,9 +69,9 @@ export default function NavBar() {
                 </li>
               );
             })}
-            <div className="flex gap-4 rounded-md border-2 border-foreground/50 px-4 py-2 text-sm">
-              {session?.user.role === "ADMIN" &&
-                adminNavItems.map((item, idx) => {
+            {session?.user.role === "ADMIN" && (
+              <div className="flex gap-4 rounded-md border-2 border-foreground/50 px-4 py-2 text-sm">
+                {adminNavItems.map((item, idx) => {
                   return (
                     <li
                       key={idx}
@@ -80,7 +83,8 @@ export default function NavBar() {
                     </li>
                   );
                 })}
-            </div>
+              </div>
+            )}
           </ul>
 
           <div className="hidden w-fit items-center gap-4 lg:flex">
