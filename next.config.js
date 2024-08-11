@@ -1,12 +1,14 @@
+import withPWA from "next-pwa";
+
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
 await import("./src/env.js");
-await import("next-pwa");
 
 /** @type {import("next").NextConfig} */
-const config = {
+
+const nextConfig = {
   reactStrictMode: true,
 
   /**
@@ -33,4 +35,25 @@ const config = {
   transpilePackages: ["geist"],
 };
 
-export default config;
+// export default config;
+
+const pwaConfig = withPWA({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  runtimeCaching: [
+    {
+      urlPattern: /^https:\/\/astero\.vercel\.app\/guides$/,
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "guides-cache",
+        expiration: {
+          maxEntries: 1,
+          maxAgeSeconds: 7 * 24 * 60 * 60,
+        },
+      },
+    },
+  ],
+});
+
+// @ts-expect-error nothing
+export default pwaConfig(nextConfig);
