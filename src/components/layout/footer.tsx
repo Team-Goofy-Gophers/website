@@ -17,7 +17,7 @@ export default function Footer() {
       <div className="flex w-full max-w-[90rem] flex-col items-center justify-center border-t">
         {/* <!-- logo --> */}
         <h1 className="notranslate mt-10 h-fit w-fit text-3xl font-bold">
-          Astero by Goofy Goofers
+          Astero by Goofy Gophers
         </h1>
 
         {/* <!-- social handles --> */}
