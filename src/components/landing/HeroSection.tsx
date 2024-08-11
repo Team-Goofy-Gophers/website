@@ -18,9 +18,18 @@ export default function HeroSection() {
   const chatDrawerRef = useRef<HTMLDivElement>(null);
   const [currDisasterId, setCurrDisasterId] = useState<string>("");
 
-  useEffect(() => {
-    chatRef.current?.collapse();
-  });
+  const switchChat = (id: string) => {
+    if (mapRef.current && chatRef.current) {
+      if (mapRef.current.isCollapsed()) {
+        mapRef.current.expand();
+        chatRef.current.resize(0);
+      } else {
+        mapRef.current.collapse();
+        chatRef.current.resize(100);
+      }
+    }
+    setCurrDisasterId(id);
+  };
 
   return (
     <>
@@ -51,7 +60,7 @@ export default function HeroSection() {
                 onChatClick={(id) => {
                   setCurrDisasterId(id);
                 }}
-                className="animate-scale h-[calc(100vh-1rem)] overflow-hidden rounded-md border-2 border-border"
+                className="h-[calc(100vh-1rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
               />
               <DrawerContent ref={chatDrawerRef}>
                 <Chat
@@ -78,31 +87,23 @@ export default function HeroSection() {
         </ResizablePanel>
         <ResizablePanel collapsible={true} className="md:h-[100svh]">
           <MapComponent
-            onChatClick={(id: string) => {
-              mapRef.current?.collapse();
-              chatRef.current?.expand();
-              setCurrDisasterId(id);
-            }}
-            className="animate-scale h-[calc(100vh-5rem)] overflow-hidden rounded-md border-2 border-border"
+            onChatClick={switchChat}
+            className="h-[calc(100vh-5rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
           />
         </ResizablePanel>
         <ResizablePanel
           ref={chatRef}
-          collapsible={true}
-          defaultSize={30}
+          defaultSize={0}
+          maxSize={30}
           className="relative"
         >
           <Chat
             disasterId={currDisasterId}
-            className="min-h-[calc(100vh-5rem)] rounded-lg border-2 border-border bg-foreground/50"
+            className="hidden min-h-[calc(100vh-5rem)] rounded-lg border-2 border-border bg-foreground/50 md:flex"
           />
           <X
             className="absolute right-1 top-1 stroke-primary/50"
-            onClick={() => {
-              mapRef.current?.expand();
-              chatRef.current?.collapse();
-              setCurrDisasterId("");
-            }}
+            onClick={() => switchChat("")}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

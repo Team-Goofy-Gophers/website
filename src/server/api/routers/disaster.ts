@@ -5,6 +5,7 @@ import {
   addDisasterReportNewZ,
   addDisasterZ,
   deleteDisasterZ,
+  getDisasterAlertZ,
   getAllDisasterAlertsZ,
   getDisasterZ,
   markDisasterAlertAsZ,
@@ -35,6 +36,19 @@ const disasterRouter = createTRPCRouter({
       return await ctx.db.disaster.findUnique({
         where: {
           id: input.id,
+        },
+      });
+    }),
+
+  getDisasterAlert: protectedProcedure
+    .input(getDisasterAlertZ)
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.disasterAlert.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          Disaster: true,
         },
       });
     }),

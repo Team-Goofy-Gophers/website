@@ -13,6 +13,9 @@ const addDisasterZ = z.object({
 const getDisasterZ = z.object({
   id: z.string(),
 });
+const getDisasterAlertZ = z.object({
+  id: z.string(),
+});
 
 const updateDisasterZ = z.object({
   id: z.string(),
@@ -63,6 +66,7 @@ export {
   updateDisasterZ,
   deleteDisasterZ,
   markDisasterAlertAsZ,
+  getDisasterAlertZ,
   getAllDisasterAlertsZ,
   addDisasterReportNewZ,
   addDisasterReportExistingZ,

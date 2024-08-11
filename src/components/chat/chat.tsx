@@ -17,7 +17,6 @@ import { ScrollArea } from "../ui/scroll-area";
 
 export default function Chat({
   disasterId,
-  className,
 }: {
   disasterId: string;
   className?: string;
@@ -27,6 +26,10 @@ export default function Chat({
   >([]);
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { data: disasterAlert } = api.disaster.getDisasterAlert.useQuery({
+    id: disasterId,
+  });
 
   // Fetch initial messages
   const { data: initialMessages } = api.chat.getMessages.useQuery({
@@ -49,7 +52,6 @@ export default function Chat({
   }, [initialMessages]);
 
   useEffect(() => {
-    //TODO: Nandan - Add Pusher key and cluster to env.js
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
@@ -90,7 +92,9 @@ export default function Chat({
   return (
     <Card className="relative h-[calc(100svh-6rem)]">
       <CardHeader className="z-10 w-full bg-background">
-        <CardTitle>{disasterId}</CardTitle>
+        <CardTitle>
+          {disasterAlert ? disasterAlert.Disaster.name : "Something went wrong"}
+        </CardTitle>
       </CardHeader>
       <ScrollArea className="z-0 mb-10 h-[85%]" ref={scrollRef}>
         <CardContent>
