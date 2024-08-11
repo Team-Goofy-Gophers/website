@@ -1,4 +1,5 @@
 import { Map } from "@vis.gl/react-google-maps";
+import { useSession } from "next-auth/react";
 import { forwardRef, type FunctionComponent, useEffect, useState } from "react";
 import { useGeolocated } from "react-geolocated";
 
@@ -21,10 +22,13 @@ export type MarkerType = {
   disasterId: string | null;
   status: "NEW" | "ONGOING" | "UNRELIABLE";
   intensity: number;
+  byMe: boolean;
 };
 
 const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
   ({ onChatClick, className, customChat }, ref) => {
+    const { data: session } = useSession();
+
     const { setLat, setLng } = useLocationStore();
 
     const { coords, isGeolocationAvailable, isGeolocationEnabled } =
@@ -53,10 +57,14 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
               disasterId: disaster.id,
               status: disaster.status as "ONGOING" | "UNRELIABLE",
               intensity: disaster.Disaster.intensity,
+              byMe:
+                disaster.DisasterReport.filter((report) => {
+                  return report.User.id === session?.user.id;
+                }).length > 0,
             }))
           : [],
       );
-    }, [disasterAlerts]);
+    }, [disasterAlerts, session]);
 
     const updateMarkerPosition = (id: number, lat: number, lng: number) => {
       setMarkers((prevMarkers) =>
@@ -104,6 +112,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
                   disasterId: null,
                   status: "NEW",
                   intensity: 0,
+                  byMe: true,
                 },
               ]);
             }}

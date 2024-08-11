@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import Pusher from "pusher-js";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -24,7 +25,13 @@ export default function Chat({
   className?: string;
 }) {
   const [messages, setMessages] = useState<
-    { id: string; message: string; sender: string; senderId: string }[]
+    {
+      id: string;
+      message: string;
+      sender: string;
+      senderId: string;
+      time: Date;
+    }[]
   >([]);
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -47,6 +54,7 @@ export default function Chat({
             message: it.message,
             sender: it.User.name ?? "User",
             senderId: it.User.id,
+            time: it.createdAt,
           };
         }),
       );
@@ -66,6 +74,7 @@ export default function Chat({
         message: string;
         sender: string;
         senderId: string;
+        time: Date;
       }) => {
         setMessages((prevMessages) => [...prevMessages, data]);
       },
@@ -79,7 +88,12 @@ export default function Chat({
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      const child = scrollRef.current.childNodes;
+      const lastChild = child[child.length - 1] as HTMLElement;
+      lastChild.scrollBy({
+        top: lastChild.scrollHeight,
+        behavior: "smooth",
+      });
     }
   }, [messages]);
 
@@ -92,25 +106,31 @@ export default function Chat({
   };
 
   return (
-    <Card className={cn("relative min-h-[calc(100vh-5rem)]")}>
+    <Card className={cn("relative max-h-[calc(100vh-5rem)]")}>
       <CardHeader className="z-10 w-full bg-background">
         <CardTitle>
           {disasterAlert ? disasterAlert.Disaster.name : "Something went wrong"}
         </CardTitle>
       </CardHeader>
-      <ScrollArea className="z-0 mb-10 h-[85%]" ref={scrollRef}>
-        <CardContent>
+      <CardContent>
+        <ScrollArea className="z-0 mb-10 h-[calc(100vh-15rem)]" ref={scrollRef}>
           {messages.map((msg) => (
             <div
               key={msg.id}
               className="my-2 flex max-w-[75%] flex-col gap-1 rounded-lg border-2 border-primary/90 bg-primary/80 p-2 text-white"
             >
               <strong>{msg.sender}</strong>
-              <p className="font-thin">{msg.message}</p>
+              <p className="font-normal">{msg.message}</p>
+              <span className="self-end text-xs font-extralight">
+                {format(
+                  msg.time instanceof Date ? msg.time : new Date(),
+                  "HH:mm",
+                )}
+              </span>
             </div>
           ))}
-        </CardContent>
-      </ScrollArea>
+        </ScrollArea>
+      </CardContent>
 
       <CardFooter className="absolute bottom-0 flex w-full items-center justify-center gap-1 bg-background">
         <Input

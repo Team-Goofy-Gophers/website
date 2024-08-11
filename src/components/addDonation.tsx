@@ -74,8 +74,6 @@ const AddDonation: FunctionComponent<{
     );
   };
 
-  console.log(form.formState.errors);
-
   return (
     <Dialog
       open={open}
