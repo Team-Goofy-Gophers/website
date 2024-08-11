@@ -12,7 +12,7 @@ import { api } from "~/utils/api";
 const GuideSection = () => {
   const { data: guides } = api.guides.getAllGuides.useQuery();
   return (
-    <div className="flex h-[calc(100vh-5rem)] w-full flex-col items-center justify-center gap-20 bg-background px-20 pb-20">
+    <div className="flex h-[calc(100vh-4rem)] w-full flex-col items-center justify-center gap-20 bg-background px-20 pb-20">
       <h1 className="w-full text-center text-6xl font-bold">Guides</h1>
       <Carousel orientation="vertical" className="w-full">
         <CarouselContent className="h-[400px]">

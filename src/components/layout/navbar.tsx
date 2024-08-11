@@ -47,7 +47,7 @@ export default function NavBar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className="fixed z-50 flex w-full flex-row items-center justify-center border-b-2 bg-blue-100 py-2 text-foreground shadow-xl"
+        className="fixed z-50 flex h-16 w-full flex-row items-center justify-center border-b bg-background py-2 text-foreground shadow-xl"
       >
         <div className="flex w-full flex-row items-center justify-between px-6">
           <Link href="/" className="text-xl font-bold hover:cursor-pointer">
