@@ -14,12 +14,6 @@ const Disaster: NextPage = () => {
         <TabsList className="w-full">
           <TabsTrigger
             className="w-1/4 data-[state=active]:w-2/4"
-            value="disaster"
-          >
-            Disaster
-          </TabsTrigger>
-          <TabsTrigger
-            className="w-1/4 data-[state=active]:w-2/4"
             value="alerts"
           >
             Alerts

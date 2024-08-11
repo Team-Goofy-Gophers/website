@@ -13,6 +13,8 @@ import Drawer from "./drawer";
 import Profile from "./profile";
 
 export default function NavBar() {
+  const { data: session } = useSession();
+
   const router = useRouter();
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -64,6 +66,17 @@ export default function NavBar() {
                 </li>
               );
             })}
+            {session?.user.role === "ADMIN" &&
+              adminNavItems.map((item, idx) => {
+                return (
+                  <li
+                    key={idx}
+                    className={`${router.pathname === item.link ? "underline" : ""}`}
+                  >
+                    <Link href={item.link}>{item.name}</Link>
+                  </li>
+                );
+              })}
           </ul>
 
           <div className="hidden w-fit items-center gap-4 lg:flex">

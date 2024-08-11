@@ -81,7 +81,7 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="text-4xl font-bold"
+            className="text-7xl font-bold"
           >
             Astero
           </motion.h1>
@@ -89,7 +89,7 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="mx-8 text-xl font-normal"
+            className="mx-8 text-2xl font-normal"
           >
             <h2>Get to know the disasters around you.</h2>
             <h2>Help people in need through chat.</h2>
