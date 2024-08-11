@@ -7,6 +7,8 @@ import { FaGoogle } from "react-icons/fa";
 import { links } from "~/constants/links";
 import { navItems } from "~/constants/nav-items";
 
+import GoogleTranslate, { getPrefLangCookie } from "../googleTranslate";
+
 export default function Footer() {
   const router = useRouter();
 
@@ -14,7 +16,7 @@ export default function Footer() {
     <footer className="flex h-auto justify-center border-t bg-white">
       <div className="flex w-full max-w-[90rem] flex-col items-center justify-center border-t">
         {/* <!-- logo --> */}
-        <h1 className="mt-10 h-fit w-fit text-3xl font-bold">Goofy Goofers</h1>
+        <h1 className="mt-10 h-fit w-fit text-3xl font-bold notranslate">Astero by Goofy Goofers</h1>
 
         {/* <!-- social handles --> */}
         <div className="mt-8 flex gap-8 opacity-50">
@@ -52,6 +54,10 @@ export default function Footer() {
               );
             })}
           </ul>
+        </div>
+
+        <div className="mt-8">
+          <GoogleTranslate prefLangCookie={getPrefLangCookie()} />
         </div>
 
         {/* <!-- copyright --> */}

@@ -50,7 +50,7 @@ export default function NavBar() {
         className="fixed z-50 flex h-16 w-full flex-row items-center justify-center border-b bg-background py-2 text-foreground shadow-xl"
       >
         <div className="flex w-full flex-row items-center justify-between px-6">
-          <Link href="/" className="text-xl font-bold hover:cursor-pointer">
+          <Link href="/" className="text-xl font-bold hover:cursor-pointer notranslate">
             Astero
           </Link>
 

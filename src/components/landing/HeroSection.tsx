@@ -39,7 +39,7 @@ export default function HeroSection() {
         className="flex w-screen flex-col pt-[12rem] md:flex-row md:items-center md:gap-2 md:px-20 md:pt-0"
       >
         <div className="flex h-screen w-screen flex-col justify-center gap-4 text-center md:hidden">
-          <h1 className="text-4xl font-bold">Astero</h1>
+          <h1 className="text-4xl font-bold notranslate">Astero</h1>
           <div className="mx-8 pb-8 text-xl font-normal">
             <h2>Get to know the disasters around you.</h2>
             <h2>Help people in need through chat.</h2>
