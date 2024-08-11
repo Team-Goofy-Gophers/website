@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+
 import {
   Carousel,
   CarouselContent,
@@ -7,6 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "~/components/ui/carousel";
+
 import { api } from "~/utils/api";
 
 const GuideSection = () => {
@@ -16,8 +18,11 @@ const GuideSection = () => {
       <h1 className="w-full text-center text-6xl font-bold">Guides</h1>
       <Carousel orientation="vertical" className="w-full">
         <CarouselContent className="h-[400px]">
-          {guides?.map((guide) => (
-            <CarouselItem className="flex h-full w-full items-center justify-evenly gap-10">
+          {guides?.map((guide, idx) => (
+            <CarouselItem
+              key={idx}
+              className="flex h-full w-full items-center justify-evenly gap-10"
+            >
               <Image
                 // src="/images/profile-placeholder.png"
                 src={

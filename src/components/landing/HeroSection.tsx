@@ -85,18 +85,13 @@ export default function HeroSection() {
             <h2>Help people in need through chat.</h2>
           </div>
         </ResizablePanel>
-        <ResizablePanel collapsible={true} className="md:h-[100svh]">
+        <ResizablePanel collapsible={true}>
           <MapComponent
             onChatClick={switchChat}
             className="h-[calc(100vh-5rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
           />
         </ResizablePanel>
-        <ResizablePanel
-          ref={chatRef}
-          defaultSize={0}
-          maxSize={30}
-          className="relative"
-        >
+        <ResizablePanel ref={chatRef} defaultSize={0} maxSize={30}>
           <Chat
             disasterId={currDisasterId}
             className="hidden min-h-[calc(100vh-5rem)] rounded-lg border-2 border-border bg-foreground/50 md:flex"

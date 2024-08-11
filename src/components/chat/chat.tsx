@@ -1,6 +1,7 @@
 import Pusher from "pusher-js";
 import React, { useEffect, useRef, useState } from "react";
 
+import { cn } from "~/lib/utils";
 import { api } from "~/utils/api";
 
 import { Button } from "../ui/button";
@@ -17,6 +18,7 @@ import { ScrollArea } from "../ui/scroll-area";
 
 export default function Chat({
   disasterId,
+  className,
 }: {
   disasterId: string;
   className?: string;
@@ -90,7 +92,7 @@ export default function Chat({
   };
 
   return (
-    <Card className="relative h-[calc(100svh-6rem)]">
+    <Card className={cn("relative min-h-[calc(100vh-5rem)]")}>
       <CardHeader className="z-10 w-full bg-background">
         <CardTitle>
           {disasterAlert ? disasterAlert.Disaster.name : "Something went wrong"}
