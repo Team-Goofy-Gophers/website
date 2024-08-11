@@ -2,7 +2,6 @@ import Cookies from "js-cookie";
 import Script from "next/script";
 import React from "react";
 
-
 declare global {
   interface Window {
     google: {
@@ -45,7 +44,11 @@ function LanguageSelector({
 }) {
   const langCookie = value.split("/")[2];
   return (
-    <select className="notranslate" onChange={(e) => onChange(e.target.value)} value={langCookie}>
+    <select
+      className="notranslate"
+      onChange={(e) => onChange(e.target.value)}
+      value={langCookie}
+    >
       {languages.map((it) => (
         <option value={it.value} key={it.value}>
           {it.label}
@@ -70,8 +73,7 @@ export default function GoogleTranslate({
 
   React.useEffect(() => {
     console.log(prefLangCookie);
-    
-  },[prefLangCookie])
+  }, [prefLangCookie]);
 
   const onChange = (value: string) => {
     const lang = "/en/" + value;
@@ -90,7 +92,7 @@ export default function GoogleTranslate({
         id="google_translate_element"
         style={{ visibility: "hidden", width: "1px", height: "1px" }}
       ></div>
-        <LanguageSelector onChange={onChange} value={langCookie} />
+      <LanguageSelector onChange={onChange} value={langCookie} />
       <Script
         src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
         strategy="afterInteractive"

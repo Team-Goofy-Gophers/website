@@ -52,6 +52,7 @@
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.5.0",
+    "@types/js-cookie": "^3.0.6",
     "@vis.gl/react-google-maps": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
