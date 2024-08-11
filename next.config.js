@@ -3,6 +3,7 @@
  * for Docker builds.
  */
 await import("./src/env.js");
+await import("next-pwa");
 
 /** @type {import("next").NextConfig} */
 const config = {
