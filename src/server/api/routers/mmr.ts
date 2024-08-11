@@ -1,76 +1,77 @@
 import { TRPCError } from "@trpc/server";
+import { type z } from "zod";
+
+import { db } from "~/server/db";
 
 import { getMMRRatio } from "~/utils/mmr";
-import { addMMRZ, removeMMRZ } from "~/zod/mmr";
+import { type addMMRZ, type removeMMRZ } from "~/zod/mmr";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+const addMMR: (input: z.infer<typeof addMMRZ>) => Promise<void> = async (
+  input,
+) => {
+  const user = await db.user.findUnique({
+    where: {
+      id: input.userId,
+    },
+  });
 
-const mmrRouter = createTRPCRouter({
-  addMMR: protectedProcedure.input(addMMRZ).mutation(async ({ ctx, input }) => {
-    const user = await ctx.db.user.findUnique({
-      where: {
-        id: input.userId,
-      },
+  if (!user)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "User not found",
     });
 
-    if (!user)
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
+  const mmrRatio = getMMRRatio(user.mmr);
 
-    const mmrRatio = getMMRRatio(user.mmr);
+  const additionalMMR =
+    input.intensity === "low"
+      ? 1 * mmrRatio
+      : input.intensity === "medium"
+        ? 2 * mmrRatio
+        : 3 * mmrRatio;
 
-    const additionalMMR =
-      input.intensity === "low"
-        ? 1 * mmrRatio
-        : input.intensity === "medium"
-          ? 2 * mmrRatio
-          : 3 * mmrRatio;
+  await db.user.update({
+    where: {
+      id: input.userId,
+    },
+    data: {
+      mmr: user.mmr + additionalMMR,
+    },
+  });
+};
 
-    await ctx.db.user.update({
-      where: {
-        id: input.userId,
-      },
-      data: {
-        mmr: user.mmr + additionalMMR,
-      },
+const removeMMR: (input: z.infer<typeof removeMMRZ>) => Promise<void> = async (
+  input,
+) => {
+  const user = await db.user.findUnique({
+    where: {
+      id: input.userId,
+    },
+  });
+
+  if (!user)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "User not found",
     });
-  }),
 
-  removeMMR: protectedProcedure
-    .input(removeMMRZ)
-    .mutation(async ({ ctx, input }) => {
-      const user = await ctx.db.user.findUnique({
-        where: {
-          id: input.userId,
-        },
-      });
+  const mmrRatio = getMMRRatio(user.mmr, false);
 
-      if (!user)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
+  const additionalMMR =
+    input.intensity === "low"
+      ? 1 * mmrRatio
+      : input.intensity === "medium"
+        ? 2 * mmrRatio
+        : 3 * mmrRatio;
 
-      const mmrRatio = getMMRRatio(user.mmr, false);
+  await db.user.update({
+    where: {
+      id: input.userId,
+    },
+    data: {
+      mmr: user.mmr - additionalMMR,
+    },
+  });
+};
 
-      const additionalMMR =
-        input.intensity === "low"
-          ? 1 * mmrRatio
-          : input.intensity === "medium"
-            ? 2 * mmrRatio
-            : 3 * mmrRatio;
-
-      await ctx.db.user.update({
-        where: {
-          id: input.userId,
-        },
-        data: {
-          mmr: user.mmr - additionalMMR,
-        },
-      });
-    }),
-});
-
-export default mmrRouter;
+export { addMMR, removeMMR };

@@ -1,3 +1,5 @@
+import { addMMR, removeMMR } from "~/server/api/routers/mmr";
+
 import {
   addDisasterReportExistingZ,
   addDisasterReportNewZ,
@@ -64,7 +66,7 @@ const disasterRouter = createTRPCRouter({
   markDisasterAlertAs: protectedProcedure
     .input(markDisasterAlertAsZ)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.disasterAlert.update({
+      const da = await ctx.db.disasterAlert.update({
         where: {
           id: input.id,
         },
@@ -72,6 +74,32 @@ const disasterRouter = createTRPCRouter({
           status: input.status,
         },
       });
+
+      const users = await ctx.db.disasterReport.findMany({
+        where: {
+          DisasterAlert: {
+            id: input.id,
+          },
+        },
+        include: {
+          User: true,
+        },
+      });
+
+      if (input.status === "RESOLVED")
+        for (const user of users)
+          await addMMR({
+            userId: user.User.id,
+            intensity:
+              da.intensity > 7 ? "high" : da.intensity > 4 ? "medium" : "low",
+          });
+      else if (input.status === "FAKE")
+        for (const user of users)
+          await removeMMR({
+            userId: user.User.id,
+            intensity:
+              da.intensity > 7 ? "high" : da.intensity > 4 ? "medium" : "low",
+          });
     }),
 
   getAllDisasterAlerts: protectedProcedure.query(async ({ ctx }) => {

@@ -1,20 +1,11 @@
 import { X } from "lucide-react";
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "~/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
 import {
   ResizablePanel,
   ResizablePanelGroup,
-  ResizablePanelRef,
+  type ResizablePanelRef,
 } from "~/components/ui/resizable";
 
 import Chat from "../chat/chat";

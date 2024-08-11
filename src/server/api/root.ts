@@ -1,5 +1,4 @@
 import disasterRouter from "~/server/api/routers/disaster";
-import mmrRouter from "~/server/api/routers/mmr";
 import userRouter from "~/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
@@ -15,7 +14,6 @@ import { pusherRouter } from "./routers/pusher";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   disaster: disasterRouter,
-  mmr: mmrRouter,
   chat: pusherRouter,
   guides: guidesRouter,
   gemini: geminiRouter,
