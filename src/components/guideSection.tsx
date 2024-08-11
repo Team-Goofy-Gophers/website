@@ -54,7 +54,8 @@ const GuideSection = () => {
   return (
     <>
       <div className="my-auto flex h-[90svh] w-full gap-4 pt-[10svh]">
-        <Card className="h-full w-1/3 p-6">
+        <Card className="flex h-full w-1/3 flex-col gap-4 overflow-y-auto p-6">
+          <h1 className="text-center text-2xl font-bold">Guides</h1>
           {guides?.map((g, index) => (
             <Card key={index} onClick={() => setCurrentGuide(g)}>
               <CardHeader>{g.title}</CardHeader>
@@ -75,7 +76,7 @@ const GuideSection = () => {
           ))}
         </Card>
 
-        <Card className="h-full w-2/3">
+        <Card className="h-full w-2/3 overflow-y-scroll">
           <CardContent className="flex flex-col items-start justify-center gap-4 p-6">
             {currentGuide ? (
               <>
