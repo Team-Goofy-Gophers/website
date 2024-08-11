@@ -11,7 +11,6 @@ import { api } from "~/utils/api";
 import { Badge } from "../ui/badge";
 import Drawer from "./drawer";
 import Profile from "./profile";
-import ThemeSwitch from "./theme-switch";
 
 export default function NavBar() {
   const router = useRouter();
@@ -68,7 +67,7 @@ export default function NavBar() {
           </ul>
 
           <div className="hidden w-fit items-center gap-4 lg:flex">
-            <Badge>{data?.mmr ?? 0}</Badge>
+            {data && <Badge>{data?.mmr ?? 0}</Badge>}
             <Profile />
           </div>
 

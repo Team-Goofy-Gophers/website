@@ -47,8 +47,6 @@ export default function GuideBot() {
     <Drawer>
       <DrawerTrigger>
         <span className="fixed bottom-5 right-5 rounded-full bg-primary p-4 text-white duration-300 hover:scale-105 hover:bg-primary/80">
-          {/* <ChatBubbleIcon className="size-8" />
-           */}
           <Bot className="size-8" />
         </span>
       </DrawerTrigger>
@@ -57,11 +55,14 @@ export default function GuideBot() {
           <DrawerTitle>
             Hi! I&apos;m <strong>GopherAI</strong>
           </DrawerTitle>
-          <DrawerDescription>Ask gopher anything!</DrawerDescription>
+          <DrawerDescription>
+            I can help you decide what to do before, during and after any
+            disaster!
+          </DrawerDescription>
         </DrawerHeader>
 
-        <div className="h-[80%] overflow-y-scroll px-5">
-          <div className="mx-10 flex w-full flex-wrap items-stretch justify-center gap-6 py-8">
+        <div className="h-[80%] overflow-x-clip overflow-y-scroll px-5">
+          <div className="mx-auto flex w-full flex-wrap items-stretch justify-center gap-6 py-8 md:mx-10">
             {response.map((it, index) => (
               <div
                 key={index}
@@ -82,7 +83,7 @@ export default function GuideBot() {
         </div>
 
         <DrawerFooter>
-          <div className="flex w-full items-center gap-2">
+          <div className="flex w-full flex-wrap items-center justify-center gap-2">
             <p>List all essential actions to take</p>
             <Select
               onValueChange={(value) => {
@@ -124,27 +125,26 @@ export default function GuideBot() {
                 <SelectItem value="kannada">Kannada</SelectItem>
               </SelectContent>
             </Select>
-
-            <Button
-              onClick={async () => {
-                await guide.mutateAsync(
-                  {
-                    phase: phase,
-                    disaster: disaster,
-                    language: language,
-                  },
-                  {
-                    onSuccess: (data) => {
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                      setResponse(data);
-                    },
-                  },
-                );
-              }}
-            >
-              {guide.isPending ? <span className="loader"></span> : "Get Guide"}
-            </Button>
           </div>
+          <Button
+            onClick={async () => {
+              await guide.mutateAsync(
+                {
+                  phase: phase,
+                  disaster: disaster,
+                  language: language,
+                },
+                {
+                  onSuccess: (data) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                    setResponse(data);
+                  },
+                },
+              );
+            }}
+          >
+            {guide.isPending ? <span className="loader"></span> : "Get Guide"}
+          </Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
