@@ -113,7 +113,7 @@ export default function Chat({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="z-0 mb-10 h-[calc(100vh-15rem)]" ref={scrollRef}>
+        <ScrollArea className="z-0 mb-10 h-[calc(100vh-17rem)]" ref={scrollRef}>
           {messages.map((msg) => (
             <div
               key={msg.id}

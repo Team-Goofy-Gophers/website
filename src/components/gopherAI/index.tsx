@@ -12,6 +12,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -65,7 +66,7 @@ export default function GopherAI() {
           <DrawerDescription>Ask gopher anything!</DrawerDescription>
         </DrawerHeader>
 
-        <div className="h-[80%] overflow-y-scroll px-5" ref={scrollRef}>
+        <ScrollArea className="h-[80%] overflow-y-scroll px-5" ref={scrollRef}>
           {history.map((item, index) => (
             <div
               key={index}
@@ -95,7 +96,7 @@ export default function GopherAI() {
               </div>
             </div>
           ))}
-        </div>
+        </ScrollArea>
 
         <DrawerFooter>
           <div className="flex w-full items-center gap-2">
