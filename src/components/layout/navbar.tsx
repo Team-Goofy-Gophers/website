@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -8,7 +10,6 @@ import { adminNavItems, navItems } from "~/constants/nav-items";
 import Drawer from "./drawer";
 import Profile from "./profile";
 import ThemeSwitch from "./theme-switch";
-import { useSession } from "next-auth/react";
 
 export default function NavBar() {
   const router = useRouter();
@@ -42,18 +43,18 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="fixed z-50 flex h-20 w-full flex-row items-center justify-center border-b-2 bg-background text-foreground">
-        {/* <!-- logo --> */}
-        <div className="flex w-full max-w-[90rem] flex-row px-6">
-          <Link
-            href="/"
-            className="w-full text-nowrap text-center text-3xl font-extrabold hover:cursor-pointer lg:w-fit lg:text-4xl"
-          >
-            Goofy Gophers
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="fixed z-50 flex w-full flex-row items-center justify-center border-b-2 bg-blue-100 py-2 text-foreground shadow-xl"
+      >
+        <div className="flex w-full flex-row items-center justify-between px-6">
+          <Link href="/" className="text-xl font-bold hover:cursor-pointer">
+            Astero
           </Link>
 
-          {/* <!-- nav items --> */}
-          <ul className="mx-10 hidden flex-grow flex-row items-center justify-center gap-10 text-center text-xl font-bold lg:flex">
+          <ul className="hidden justify-center gap-4 text-lg lg:flex">
             {navItems.map((item, idx) => {
               return (
                 <li
@@ -64,36 +65,18 @@ export default function NavBar() {
                 </li>
               );
             })}
-
-            {/* <!-- admin links --> */}
-            {session?.data?.user?.role === "ADMIN" &&
-              adminNavItems.map((item, idx) => {
-                return (
-                  <li
-                    key={idx}
-                    className={`${
-                      router.pathname === item.link ? "underline" : ""
-                    }`}
-                  >
-                    <Link href={item.link}>{item.name}</Link>
-                  </li>
-                );
-              })}
           </ul>
 
-          {/* <!-- profiles --> */}
           <div className="hidden w-fit items-center gap-4 lg:flex">
-            {/* <ThemeSwitch />s */}
             <Profile />
           </div>
 
-          {/* <!-- mobile options --> */}
           <GiHamburgerMenu
-            className="absolute right-5 top-4 block size-10 lg:hidden"
+            className="right-5 top-4 block size-7 lg:hidden"
             onClick={toggleDrawer}
           />
         </div>
-      </nav>
+      </motion.nav>
       <Drawer isOpen={menuOpen} toggleDrawer={toggleDrawer} />
     </>
   );

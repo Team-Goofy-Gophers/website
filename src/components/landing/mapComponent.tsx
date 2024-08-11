@@ -113,17 +113,6 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
               className={className}
               defaultZoom={13}
               defaultCenter={{ lat: coords.latitude, lng: coords.longitude }}
-              // onCameraChanged={
-              //   (ev: MapCameraChangedEvent) => {
-              //     console.log("map move");
-              //   }
-              //   console.log(
-              //     "camera changed:",
-              //     ev.detail.center,
-              //     "zoom:",
-              //     ev.detail.zoom,
-              //   )
-              // }
               onClick={(ev) => {
                 setMarkers([
                   ...markers,
@@ -200,9 +189,7 @@ const MapComponent = forwardRef<HTMLDivElement, MapComponentProps>(
               )}
             >
               <div className="absolute inset-0 bg-black opacity-50"></div>
-              <div className="z-50 text-background">
-                Getting the location load
-              </div>
+              <div className="z-50 text-background">Loading Location</div>
             </div>
           )}
         </div>

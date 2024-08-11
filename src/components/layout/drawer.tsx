@@ -43,7 +43,7 @@ export default function Drawer(props: {
 
         {/* <!-- profiles --> */}
         <div className="mt-8 flex w-full flex-col items-center justify-center gap-4">
-          <ThemeSwitch />
+          {/* <ThemeSwitch /> */}
           <Profile />
         </div>
       </div>
