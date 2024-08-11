@@ -19,7 +19,7 @@ export default function Profile() {
   if (session.status === "unauthenticated") {
     return (
       <>
-        <Button onClick={() => signIn()}>Sign In</Button>
+        <Button onClick={() => signIn("google")}>Sign In</Button>
       </>
     );
   } else if (session.status === "authenticated") {
