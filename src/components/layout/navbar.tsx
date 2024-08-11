@@ -6,7 +6,9 @@ import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 
 import { adminNavItems, navItems } from "~/constants/nav-items";
+import { api } from "~/utils/api";
 
+import { Badge } from "../ui/badge";
 import Drawer from "./drawer";
 import Profile from "./profile";
 import ThemeSwitch from "./theme-switch";
@@ -15,14 +17,12 @@ export default function NavBar() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = React.useState(false);
 
-  const session = useSession();
+  const { data } = api.user.getMe.useQuery();
 
   function toggleDrawer() {
     const navbar = document.querySelector("nav");
     const footer = document.querySelector("footer");
     const mainSection = document.getElementById("main-section");
-
-    console.log(footer);
 
     if (mainSection && (footer ?? navbar)) {
       if (menuOpen) {
@@ -68,6 +68,7 @@ export default function NavBar() {
           </ul>
 
           <div className="hidden w-fit items-center gap-4 lg:flex">
+            <Badge>{data?.mmr ?? 0}</Badge>
             <Profile />
           </div>
 

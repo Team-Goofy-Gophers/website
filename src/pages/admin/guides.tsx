@@ -43,7 +43,7 @@ export default function Guides() {
   });
   return (
     <>
-      <div className="container flex w-fit flex-col items-center justify-center gap-2">
+      <div className="container flex h-[90svh] w-fit flex-col items-center justify-center gap-2 pt-[10svh]">
         <Card className="w-full">
           <CardHeader>
             <CardTitle>Guides</CardTitle>
@@ -129,16 +129,19 @@ export default function Guides() {
                   >
                     <CarouselContent>
                       {currentGuide?.images.map((url, index) => (
-                        <CarouselItem key={index} className="relative">
+                        <CarouselItem
+                          key={index}
+                          className="basis-1/2` lg:basis-1/3"
+                        >
                           <div>
                             <Card>
                               <CardContent className="aspect-auto">
                                 <Image
                                   src={url}
-                                  width={200}
-                                  height={200}
+                                  width={300}
+                                  height={300}
                                   alt={`${index}`}
-                                  className="h-[10rem] w-[20rem] object-cover"
+                                  className="aspect-video h-48 w-full rounded-lg object-cover"
                                 />
                               </CardContent>
                             </Card>

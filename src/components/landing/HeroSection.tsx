@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -35,19 +36,16 @@ export default function HeroSection() {
     <>
       <ResizablePanelGroup
         direction="horizontal"
-        className="flex h-fit w-screen flex-col md:min-h-[calc(100vh-4rem)] md:flex-row md:items-center md:gap-2 md:px-20"
+        className="flex w-screen flex-col pt-[12rem] md:flex-row md:items-center md:gap-2 md:px-20 md:pt-0"
       >
-        <div className="flex h-fit w-screen flex-col justify-center gap-4 text-center md:hidden">
-          <h1 className="text-4xl font-bold">Goofy Goofers</h1>
-          <div className="mx-8 text-xl font-normal">
+        <div className="flex h-screen w-screen flex-col justify-center gap-4 text-center md:hidden">
+          <h1 className="text-4xl font-bold">Astero</h1>
+          <div className="mx-8 pb-8 text-xl font-normal">
             <h2>Get to know the disasters around you.</h2>
             <h2>Help people in need through chat.</h2>
           </div>
 
-          <div
-            onClick={(e) => e.currentTarget.scrollIntoView()}
-            className="mt-20 h-[calc(100vh-1rem)] pt-2 md:hidden"
-          >
+          <div className="md:hidden">
             <Drawer>
               <MapComponent
                 customChat={({ onClick }) => {
@@ -60,7 +58,7 @@ export default function HeroSection() {
                 onChatClick={(id) => {
                   setCurrDisasterId(id);
                 }}
-                className="h-[calc(100vh-1rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
+                className="h-[100svh] animate-scale overflow-hidden rounded-md border-2 border-border"
               />
               <DrawerContent ref={chatDrawerRef}>
                 <Chat
@@ -77,24 +75,36 @@ export default function HeroSection() {
           collapsible={true}
           collapsedSize={0}
           defaultSize={50}
-          className="hidden w-1/2 flex-col justify-center gap-4 text-center md:flex"
+          className="hidden h-[100svh] w-1/2 flex-col justify-center gap-4 text-center md:flex"
         >
-          <h1 className="text-4xl font-bold">Goofy Goofers</h1>
-          <div className="mx-8 text-xl font-normal">
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="text-4xl font-bold"
+          >
+            Astero
+          </motion.h1>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="mx-8 text-xl font-normal"
+          >
             <h2>Get to know the disasters around you.</h2>
             <h2>Help people in need through chat.</h2>
-          </div>
+          </motion.div>
         </ResizablePanel>
         <ResizablePanel collapsible={true}>
           <MapComponent
             onChatClick={switchChat}
-            className="h-[calc(100vh-5rem)] animate-scale overflow-hidden rounded-md border-2 border-border"
+            className="h-[85svh] animate-scale overflow-hidden rounded-md border-2 border-border"
           />
         </ResizablePanel>
         <ResizablePanel ref={chatRef} defaultSize={0} maxSize={30}>
           <Chat
             disasterId={currDisasterId}
-            className="hidden min-h-[calc(100vh-5rem)] rounded-lg border-2 border-border bg-foreground/50 md:flex"
+            className="hidden h-[85svh] rounded-lg border-2 border-border bg-foreground/50 md:flex"
           />
           <X
             className="absolute right-1 top-1 stroke-primary/50"

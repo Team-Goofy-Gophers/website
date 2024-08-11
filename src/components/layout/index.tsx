@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React, { type ReactNode, type FunctionComponent } from "react";
 import { Toaster } from "sonner";
 
@@ -24,7 +24,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
       </div>
     );
 
-  if (status === "unauthenticated") void router.push("/");
+  // if (status === "unauthenticated") void router.push("/");
 
   if (
     status === "authenticated" &&
@@ -38,7 +38,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
       <Toaster />
       <div className="h-full w-full">
         <NavBar />
-        <main id="main-section" className="mt-20 min-h-[80vh] p-5">
+        <main id="main-section" className="min-h-[100svh] p-5">
           {loading ? (
             <div className="flex size-full items-center justify-center">
               <Loader />

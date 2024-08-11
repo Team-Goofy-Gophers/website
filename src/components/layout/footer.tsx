@@ -11,8 +11,8 @@ export default function Footer() {
   const router = useRouter();
 
   return (
-    <footer className="flex h-auto justify-center border-t-2">
-      <div className="flex w-full max-w-[90rem] flex-col items-center justify-center border-t-2">
+    <footer className="flex h-auto justify-center border-t bg-white">
+      <div className="flex w-full max-w-[90rem] flex-col items-center justify-center border-t">
         {/* <!-- logo --> */}
         <h1 className="mt-10 h-fit w-fit text-3xl font-bold">Goofy Goofers</h1>
 
