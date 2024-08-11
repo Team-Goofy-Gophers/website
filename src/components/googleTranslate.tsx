@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
+
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import Cookies from "js-cookie";
 import Script from "next/script";
 import React from "react";
