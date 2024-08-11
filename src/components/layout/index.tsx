@@ -34,7 +34,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
     return <Unauthorized user={session.user} />;
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="magicpattern flex h-screen w-screen">
       <Toaster />
       <div className="h-full w-full">
         <NavBar />

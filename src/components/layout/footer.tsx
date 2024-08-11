@@ -24,18 +24,6 @@ export default function Footer() {
               window.open(links.GITHUB, "_blank");
             }}
           />
-          <FaInstagram
-            className="size-10"
-            onClick={() => {
-              window.open(links.INSTAGRAM, "_blank");
-            }}
-          />
-          <FaGoogle
-            className="size-10"
-            onClick={() => {
-              window.open(links.GOOGLE, "_blank");
-            }}
-          />
         </div>
 
         <div className="flex-grow">
@@ -56,7 +44,7 @@ export default function Footer() {
 
         {/* <!-- copyright --> */}
         <div className="my-8 text-center text-sm opacity-70">
-          <p>&copy; 2021 Goofy Goofers</p>
+          <p>&copy; 2024 Goofy Goofers</p>
         </div>
       </div>
     </footer>

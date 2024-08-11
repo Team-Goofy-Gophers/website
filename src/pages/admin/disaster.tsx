@@ -9,7 +9,7 @@ import ReportsTab from "~/components/admin/disaster/reportsTable";
 
 const Disaster: NextPage = () => {
   return (
-    <div className="m-10 flex h-full">
+    <div className="flex h-full pt-[4rem]">
       <Tabs defaultValue="alerts" className="w-full">
         <TabsList className="w-full">
           <TabsTrigger
@@ -25,10 +25,10 @@ const Disaster: NextPage = () => {
             Reports
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="alerts">
+        <TabsContent value="alerts" className="w-full">
           <AlertTab />
         </TabsContent>
-        <TabsContent value="reports">
+        <TabsContent value="reports" className="w-full">
           <ReportsTab />
         </TabsContent>
       </Tabs>

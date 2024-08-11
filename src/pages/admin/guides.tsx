@@ -43,7 +43,7 @@ export default function Guides() {
   });
   return (
     <>
-      <div className="container flex h-[90svh] w-full flex-col items-center justify-center gap-2 pt-[10svh]">
+      <div className="flex-coljustify-center container mt-[4rem] flex h-[90svh] w-full justify-center gap-2">
         <Card className="w-1/2">
           <CardHeader>
             <CardTitle>Guides</CardTitle>
@@ -86,7 +86,7 @@ export default function Guides() {
         </Card>
 
         {currentGuide && (
-          <Card className="py-6">
+          <Card className="overflow-y-scroll py-6">
             <CardContent className="flex flex-col gap-3">
               <Input
                 onChange={(e) => {
