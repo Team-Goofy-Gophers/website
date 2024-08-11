@@ -16,7 +16,9 @@ export default function Footer() {
     <footer className="flex h-auto justify-center border-t bg-white">
       <div className="flex w-full max-w-[90rem] flex-col items-center justify-center border-t">
         {/* <!-- logo --> */}
-        <h1 className="mt-10 h-fit w-fit text-3xl font-bold notranslate">Astero by Goofy Goofers</h1>
+        <h1 className="notranslate mt-10 h-fit w-fit text-3xl font-bold">
+          Astero by Goofy Goofers
+        </h1>
 
         {/* <!-- social handles --> */}
         <div className="mt-8 flex gap-8 opacity-50">
@@ -50,7 +52,7 @@ export default function Footer() {
 
         {/* <!-- copyright --> */}
         <div className="my-8 text-center text-sm opacity-70">
-          <p>&copy; 2024 Goofy Goofers</p>
+          <p>&copy; 2024 Goofy Gophers</p>
         </div>
       </div>
     </footer>
