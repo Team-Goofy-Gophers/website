@@ -166,6 +166,11 @@ const disasterRouter = createTRPCRouter({
         },
         include: {
           Disaster: true,
+          DisasterReport: {
+            include: {
+              User: true,
+            },
+          },
         },
       });
     }),

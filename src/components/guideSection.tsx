@@ -1,32 +1,10 @@
 import { Guide } from "@prisma/client";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import React, { useState } from "react";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "~/components/ui/drawer";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-
-import { cn } from "~/lib/utils";
 import { api } from "~/utils/api";
 
-import { Button } from "./ui/button";
+import GuideBot from "./gopherAI/guideBot";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import {
   Carousel,
@@ -35,26 +13,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
-import { Input } from "./ui/input";
 
 const GuideSection = () => {
   const { data: guides } = api.guides.getAllGuides.useQuery();
   const [currentGuide, setCurrentGuide] = useState<Guide | null>(null);
-  const [history, setHistory] = useState<
-    {
-      role: "user" | "model";
-      parts: { text: string }[];
-    }[]
-  >([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [language, setLanguage] = useState("english");
-
-  const chat = api.gemini.chat.useMutation();
 
   return (
     <>
       <div className="my-auto flex h-[90svh] w-full gap-4 pt-[10svh]">
-        <Card className="flex h-full w-1/3 flex-col gap-4 overflow-y-auto p-6">
+        <Card className="flex h-full w-full flex-row gap-4 overflow-y-scroll p-6 md:w-1/3 md:flex-col">
           <h1 className="text-center text-2xl font-bold">Guides</h1>
           {guides?.map((g, index) => (
             <Card key={index} onClick={() => setCurrentGuide(g)}>
@@ -76,7 +43,7 @@ const GuideSection = () => {
           ))}
         </Card>
 
-        <Card className="h-full w-2/3 overflow-y-scroll">
+        <Card className="h-full w-full overflow-y-scroll md:w-2/3">
           <CardContent className="flex flex-col items-start justify-center gap-4 p-6">
             {currentGuide ? (
               <>
@@ -115,103 +82,7 @@ const GuideSection = () => {
         </Card>
       </div>
 
-      <Drawer>
-        <DrawerTrigger>
-          <span className="absolute bottom-5 right-5 rounded-full bg-primary p-4 text-white duration-300 hover:scale-105 hover:bg-primary/80">
-            <ChatBubbleIcon className="size-8" />
-          </span>
-        </DrawerTrigger>
-        <DrawerContent className="!h-[80svh]">
-          <DrawerHeader>
-            <DrawerTitle>
-              Hi! I&apos;m <strong>GopherAI</strong>
-            </DrawerTitle>
-            <DrawerDescription>Ask gopher anything!</DrawerDescription>
-          </DrawerHeader>
-
-          <div className="h-[80%] overflow-y-scroll px-5">
-            {history.map((item, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex w-full",
-                  item.role === "user" ? "justify-end" : "justify-start",
-                )}
-              >
-                <div
-                  className={cn(
-                    item.role === "user"
-                      ? "bg-gray-800 text-white"
-                      : "bg-orange-300 text-black",
-                    "min-w-[25%] max-w-[50%] rounded-lg p-2",
-                  )}
-                >
-                  <strong>{item.role === "user" ? "User" : "Mitra"}</strong>
-                  {item.parts.map((part, index) => (
-                    <Markdown
-                      remarkPlugins={[remarkGfm]}
-                      key={index}
-                      className={"font-thin"}
-                    >
-                      {part.text}
-                    </Markdown>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <DrawerFooter>
-            <div className="flex w-full items-center gap-2">
-              <Input
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type here"
-              />
-              <Select
-                onValueChange={(value) => {
-                  setLanguage(value);
-                }}
-                defaultValue="english"
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Language" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="english">English</SelectItem>
-                  <SelectItem value="hindi">Hindi</SelectItem>
-                  <SelectItem value="kannada">Kannada</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Button
-                onClick={() => {
-                  chat.mutate(
-                    {
-                      text: newMessage,
-                      history: history,
-                      language: language,
-                    },
-                    {
-                      onSuccess: (data) => {
-                        setHistory([
-                          ...history,
-                          { role: "user", parts: [{ text: newMessage }] },
-                          { role: "model", parts: [{ text: data }] },
-                        ]);
-                        setNewMessage("");
-                      },
-                    },
-                  );
-                }}
-                disabled={newMessage === "" && chat.isPending}
-              >
-                {chat.isPending ? <span>...</span> : "Send"}
-              </Button>
-            </div>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      <GuideBot />
     </>
   );
 };

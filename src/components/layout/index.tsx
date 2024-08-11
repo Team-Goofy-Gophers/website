@@ -9,6 +9,8 @@ import NavBar from "~/components/layout/navbar";
 import Loader from "~/components/loader";
 import { useLoading } from "~/hooks";
 
+import GopherAI from "../gopherAI";
+
 const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
   const { status, data: session } = useSession();
   const pathname = usePathname();
@@ -45,6 +47,7 @@ const Layout: FunctionComponent<{ children: ReactNode }> = ({ children }) => {
             children
           )}
         </main>
+        <GopherAI />
         <Footer />
       </div>
     </div>

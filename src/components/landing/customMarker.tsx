@@ -99,11 +99,13 @@ const CustomMarker: React.FC<{
               )}
               {activeMarker.disasterId && (
                 <>
-                  <AddDisasterReportExisting
-                    disasterId={activeMarker.disasterId}
-                    lat={activeMarker.lat}
-                    long={activeMarker.lng}
-                  />
+                  {!activeMarker.byMe && (
+                    <AddDisasterReportExisting
+                      disasterId={activeMarker.disasterId}
+                      lat={activeMarker.lat}
+                      long={activeMarker.lng}
+                    />
+                  )}
                   <AddDonation disasterId={activeMarker.disasterId} />
                 </>
               )}
