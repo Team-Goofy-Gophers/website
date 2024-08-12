@@ -22,12 +22,11 @@ export default function Footer() {
 
         {/* <!-- social handles --> */}
         <div className="mt-8 flex gap-8 opacity-50">
-          <FaGithub
-            className="size-10"
-            onClick={() => {
-              window.open(links.GITHUB, "_blank");
-            }}
-          />
+          <a href="https://github.com/Team-Goofy-Gophers/website" target="_blank">
+            <FaGithub
+              className="size-10"
+            />
+          </a>
         </div>
 
         <div className="flex-grow">
